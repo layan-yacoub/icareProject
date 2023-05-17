@@ -12,10 +12,11 @@ import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
+import org.springframework.web.server.ResponseStatusException;
 import java.time.DayOfWeek;
 import java.time.LocalTime;
 import java.time.Month;
+import java.time.YearMonth;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -31,39 +32,67 @@ public class NutritionistController {
     @Autowired
     public NutritionistController(NutritionistService nutritionistService, PatientService patientService, PatientRepository patientRepository) {
         this.nutritionistService = nutritionistService;
-        this.patientService = patientService;
+        this.patientService= patientService;
         this.patientRepository = patientRepository;
     }
 
     // APPOINTMENT SCHEDULE
-    @PostMapping("/{nutritionist_id}/generateMonthlyAppointments") //generateMonthlyAppointments and exclude a list of days of the week
-    public ResponseEntity<List<Appointment>> generateMonthlyAppointments(@PathVariable Long nutritionist_id , int year, Month month,
-                                                                         LocalTime startTime, LocalTime endTime, List<DayOfWeek> excludedDays){
-
+    @PostMapping("/{nutritionist_id}/generateMonthlyAppointments") ///generateMonthlyAppointments and exclude a list of days of the week
+    public ResponseEntity<List<Appointment>> generateMonthlyAppointments(@PathVariable Long nutritionist_id, int year,
+                                                                         Month month, LocalTime startTime, LocalTime endTime, List<DayOfWeek> excludedDays) {
         Optional<Nutritionist> nutritionistOptional = nutritionistService.findById(nutritionist_id);
 
         if (nutritionistOptional.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
 
-        nutritionistService.generateMonthlyAppointments(nutritionist_id,year,month,startTime,endTime,excludedDays);
-        return ResponseEntity.status(HttpStatus.CREATED).build();
+        try {
+            List<Appointment> generatedAppointments = nutritionistService.generateMonthlyAppointments(nutritionist_id, year,
+                    month, startTime, endTime, excludedDays);
+            return ResponseEntity.status(HttpStatus.CREATED).body(generatedAppointments);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
     }
-    @PostMapping("/{nutritionistId}/availability") //  add an available time slot for a specific date
+    @PostMapping("/{nutritionist_id}/availability") //  add an available time slot for a specific date
     public ResponseEntity<String> addAvailability(
-            @PathVariable("nutritionistId") Long nutritionistId,
+            @PathVariable("nutritionist_id") Long nutritionistId,
             @RequestBody AvailabilityRequest availabilityRequest) {
         nutritionistService.addAvailability(nutritionistId, availabilityRequest);
         return ResponseEntity.ok("Availability added successfully");
     }
-    @DeleteMapping("/{nutritionistId}/availability")// Endpoint to remove an available time slot for a specific date
+    @DeleteMapping("/{nutritionist_id}/availability")// Endpoint to remove an available time slot for a specific date
     public ResponseEntity<String> removeAvailability(
-            @PathVariable("nutritionistId") Long nutritionistId,
+            @PathVariable("nutritionist_id") Long nutritionistId,
             @RequestBody AvailabilityRequest availabilityRequest) {
         nutritionistService.removeAvailability(nutritionistId, availabilityRequest);
         return ResponseEntity.ok("Availability removed successfully");
     }
 
+    @GetMapping("/{nutritionist_id}/generatedAppointments") //get ALL the generated appointments for a specific nutritionist
+    public ResponseEntity<List<Appointment>> getGeneratedAppointments(@PathVariable Long nutritionist_id) {
+        try {
+            List<Appointment> generatedAppointments = nutritionistService.getGeneratedAppointments(nutritionist_id);
+            return ResponseEntity.ok(generatedAppointments);
+        } catch (ChangeSetPersister.NotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+    }
+
+    @GetMapping("/{nutritionist_id}/generatedAppointments/{year}/{month}")//get the generated appointments in specific month for a specific nutritionist
+    public ResponseEntity<List<Appointment>> getGeneratedAppointments(
+            @PathVariable("nutritionist_id") Long nutritionistId,
+            @PathVariable("year") int year,
+            @PathVariable("month") Month month) {
+        try {
+            YearMonth yearMonth = YearMonth.of(year, month);
+            List<Appointment> generatedAppointments = nutritionistService.getGeneratedAppointments(nutritionistId, yearMonth);
+            return ResponseEntity.ok(generatedAppointments);
+
+        } catch (ChangeSetPersister.NotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+    }
 
     //SET AMOUNT
     @PutMapping("/{nutritionist_id}/amountOfAppointment") // Set amount of appointments for a nutritionist

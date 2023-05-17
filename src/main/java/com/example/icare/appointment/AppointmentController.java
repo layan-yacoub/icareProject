@@ -1,4 +1,6 @@
 package com.example.icare.appointment;
+import com.example.icare.domain.Patient;
+import com.example.icare.service.PatientService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import com.example.icare.domain.Nutritionist;
@@ -28,11 +30,14 @@ public class AppointmentController  {
     private final NutritionistRepository nutritionistRepository;
 
     private final AppointmentRepository appointmentRepository;
+
+    private final PatientService patientService;
     @Autowired
-    public AppointmentController(NutritionistRepository nutritionistRepository, AppointmentService appointmentService, AppointmentRepository appointmentRepository) {
+    public AppointmentController(NutritionistRepository nutritionistRepository, AppointmentService appointmentService, AppointmentRepository appointmentRepository, PatientService patientService) {
         this.nutritionistRepository = nutritionistRepository;
         this.appointmentService = appointmentService;
         this.appointmentRepository = appointmentRepository;
+        this.patientService = patientService;
     }
 
     @SneakyThrows
@@ -84,6 +89,19 @@ public class AppointmentController  {
         return ResponseEntity.ok(appointments);
     }
 
+    @GetMapping("/patients/{patient_id}/appointments")
+    public ResponseEntity<List<Appointment>> getAppointmentsByPatientId(@PathVariable Long patient_id) {
+        Optional<Patient> patientOptional = patientService.findById(patient_id);
+
+        if (patientOptional.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+
+        Patient patient = patientOptional.get();
+        List<Appointment> appointments = appointmentService.getAppointmentsByPatient(patient);
+
+        return ResponseEntity.ok(appointments);
+    }
     @DeleteMapping("/{appointment_id}")//Delete the appointment from the database
     public ResponseEntity<Void> deleteAppointment(@PathVariable Long appointment_id, @RequestParam Long nutritionistId) {
         Optional<Nutritionist> nutritionistOptional = nutritionistRepository.findById(nutritionistId);

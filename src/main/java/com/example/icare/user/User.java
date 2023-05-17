@@ -28,6 +28,8 @@ public class User  {
     private String password;
     @Enumerated(EnumType.STRING)
     private Role role;
+    @Column(name="status")
+    private boolean status;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)    // Relationships with Report entity
     private List<Report> reports = new ArrayList<>();

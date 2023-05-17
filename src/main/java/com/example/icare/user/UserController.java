@@ -1,13 +1,10 @@
 package com.example.icare.user;
 
-import com.example.icare.domain.Nutritionist;
 import com.example.icare.registrationRequest.*;
 import jakarta.servlet.http.HttpSession;
 import lombok.AllArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 @AllArgsConstructor
 @RestController //is used in REST Web services & mark class as Controller Class

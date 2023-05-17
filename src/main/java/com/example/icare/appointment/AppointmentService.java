@@ -1,6 +1,7 @@
 package com.example.icare.appointment;
 
 import com.example.icare.domain.Nutritionist;
+import com.example.icare.domain.Patient;
 import com.example.icare.domain.Payment;
 import com.example.icare.repository.NutritionistRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -105,6 +106,9 @@ public class AppointmentService {
         return appointmentRepository.findByNutritionist(nutritionist);
     }
 
+    public List<Appointment> getAppointmentsByPatient(Patient patient) {
+        return appointmentRepository.findByPatient(patient);
+    }
     public void save(Appointment appointment) { appointmentRepository.save(appointment);
     }
 

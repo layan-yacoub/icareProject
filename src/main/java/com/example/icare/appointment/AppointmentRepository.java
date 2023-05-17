@@ -1,5 +1,6 @@
 package com.example.icare.appointment;
 import com.example.icare.domain.Nutritionist;
+import com.example.icare.domain.Patient;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 import java.time.LocalDate;
@@ -21,4 +22,6 @@ public interface AppointmentRepository extends JpaRepository<Appointment,Long> {
     List<Appointment> findByNutritionist(Nutritionist nutritionist);
 
     List<Appointment> findAvailableAppointments(List<Nutritionist> availableNutritionists, LocalDate availableDate);
+
+    List<Appointment> findByPatient(Patient patient);
 }

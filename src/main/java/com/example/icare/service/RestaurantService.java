@@ -1,5 +1,6 @@
 package com.example.icare.service;
 
+import com.example.icare.domain.Nutritionist;
 import com.example.icare.domain.Restaurant;
 import com.example.icare.repository.RestaurantRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,5 +22,14 @@ public class RestaurantService {
 
     public List<Restaurant> getAllRestaurants() {
        return restaurantRepository.findAll();
+    }
+
+    public void saveRestaurant(Restaurant restaurant) {
+        restaurantRepository.save(restaurant);
+    }
+
+    public List<Restaurant> getAllRestaurantsWithStatus(boolean status) {
+        return restaurantRepository.findByStatus(status);
+
     }
 }

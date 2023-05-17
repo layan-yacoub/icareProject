@@ -32,6 +32,7 @@ public class PatientController {
     this.nutritionistService = nutritionistService;
     this.restaurantService = restaurantService;
 }
+
     //COUNT
     @GetMapping("/{patient_id}/age") // Age counter
     public ResponseEntity<Integer> getPatientAge(@PathVariable ("patient_id") Long patientId) {
@@ -150,6 +151,8 @@ public class PatientController {
         List<Restaurant> restaurants = restaurantService.getAllRestaurants();
         return new ResponseEntity<>(restaurants, HttpStatus.OK);
     }
+
+
 
 
     //RATE-NUTRITIONIST

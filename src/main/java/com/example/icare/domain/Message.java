@@ -26,11 +26,13 @@ public class Message {
     @Column(name = "message_date")
     private Timestamp messageDate;
 
+    // Many-to-one relationships
+
     @ManyToOne
     @JoinColumn(name = "nutritionist_id")
     private Nutritionist nutritionist;
 
-    @ManyToOne(fetch = FetchType.LAZY) // Many-to-one relationship with nutritionist
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "patient_id")
     private Patient patient;
 

@@ -5,8 +5,6 @@ import com.example.icare.appointment.Availability;
 import com.example.icare.user.User;
 import jakarta.persistence.*;
 import lombok.*;
-import org.springframework.data.crossstore.ChangeSetPersister;
-
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -48,9 +46,11 @@ public class Nutritionist {
     @Column(name = "statues")
     private boolean statues = true;
     @Column(name="rating")
-    private int rating =0;
+    private int rating ;
     @Column(name="rating_counter")
     private int ratingCounter =0;
+    @Column(name="total_rating")
+    private int totalRating=0;
     //Availability List
     @OneToMany(mappedBy = "nutritionist", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Availability> availabilities = new ArrayList<>();
@@ -82,7 +82,4 @@ public class Nutritionist {
         this.experience = experience;
     }
 
-    public void addAppointments(Appointment appointment)
-    { appointments.add(appointment);
-    }
 }

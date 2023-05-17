@@ -11,8 +11,10 @@ import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.stereotype.Service;
 
 import java.time.*;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class NutritionistService {
@@ -33,8 +35,18 @@ public class NutritionistService {
     }
 
     @SneakyThrows
-    public void generateMonthlyAppointments(Long nutritionist_id , int year, Month month, LocalTime startTime, LocalTime endTime, List<DayOfWeek> excludedDays) {
+    public List<Appointment> generateMonthlyAppointments(Long nutritionist_id , int year, Month month, LocalTime startTime, LocalTime endTime, List<DayOfWeek> excludedDays) {
 
+        List<Appointment> generatedAppointments = new ArrayList<>();
+
+        // Validate year and month
+        if (year < 0 || month == null) {
+            throw new IllegalArgumentException("Invalid year or month");
+        }
+
+        // Get the nutritionist entity
+        Nutritionist nutritionist = nutritionistRepository.findById(nutritionist_id)
+                .orElseThrow(ChangeSetPersister.NotFoundException::new);
 
         // Get the number of days in the specified month
         int numDays = YearMonth.of(year, month).lengthOfMonth();
@@ -54,20 +66,48 @@ public class NutritionistService {
                 Appointment appointment = new Appointment();
                 appointment.setStartTime(currentDateTime);
                 appointment.setEndTime(currentDateTime.plusHours(1));
-                appointment.setNutritionist(nutritionistRepository.getReferenceById(nutritionist_id));
+                appointment.setNutritionist(nutritionist);
 
-                getNutritionistById(nutritionist_id).addAppointments(appointment);
+                nutritionist.getAppointments().add(appointment);
+                generatedAppointments.add(appointment);
 
                 currentDateTime = currentDateTime.plusHours(1);
             }
         }
+        nutritionistRepository.save(nutritionist); // Save the nutritionist with the generated appointments
+        return generatedAppointments;
+    }
+    // get ALL the generated appointments for a specific nutritionist
+    public List<Appointment> getGeneratedAppointments(Long nutritionistId) throws ChangeSetPersister.NotFoundException {
+        Optional<Nutritionist> nutritionistOptional = nutritionistRepository.findById(nutritionistId);
+        if (nutritionistOptional.isEmpty()) {
+            throw new ChangeSetPersister.NotFoundException();
+        }
+        Nutritionist nutritionist = nutritionistOptional.get();
+        return nutritionist.getAppointments();
+    }
 
+   // get the generated appointments in specific month for a specific nutritionist
+    public List<Appointment> getGeneratedAppointments(Long nutritionistId, YearMonth yearMonth) throws ChangeSetPersister.NotFoundException {
+        Optional<Nutritionist> nutritionistOptional = nutritionistRepository.findById(nutritionistId);
+        if (nutritionistOptional.isEmpty()) {
+            throw new ChangeSetPersister.NotFoundException();
+        }
+        Nutritionist nutritionist = nutritionistOptional.get();
+
+        List<Appointment> generatedAppointments = nutritionist.getAppointments();
+
+        // Filter appointments based on the specified YearMonth
+        return generatedAppointments.stream()
+                .filter(appointment -> YearMonth.from(appointment.getStartTime()).equals(yearMonth))
+                .collect(Collectors.toList());
     }
 
     public Optional<Nutritionist> findById(Long nutritionistId) {
         return nutritionistRepository.findById(nutritionistId);
     }
 
+    //add one day for available appointments
     public void addAvailability(Long nutritionistId, AvailabilityRequest availabilityRequest) {
         Nutritionist nutritionist;
         try {
@@ -79,7 +119,7 @@ public class NutritionistService {
         nutritionist.getAvailabilities().add(availability);
         nutritionistRepository.save(nutritionist);
     }
-
+    //remove one day for available appointments
     public void removeAvailability(Long nutritionistId, AvailabilityRequest availabilityRequest) {
         Nutritionist nutritionist ;
         try {
@@ -88,7 +128,7 @@ public class NutritionistService {
             throw new RuntimeException("Nutritionist Not Found");
         }
         Availability availability = createAvailabilityFromRequest(availabilityRequest);
-        nutritionist.getAvailabilities().remove(availability);
+        nutritionist.getAppointments().remove(availability);
         nutritionistRepository.save(nutritionist);
     }
 
@@ -124,4 +164,7 @@ public class NutritionistService {
         nutritionistRepository.save(nutritionist);
     }
 
+    public List<Nutritionist> getAllCentersWithStatus(boolean status) {
+        return nutritionistRepository.findByStatus(status);
+    }
 }

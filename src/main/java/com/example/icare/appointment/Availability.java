@@ -38,5 +38,8 @@ public class Availability {
         setStartTime(start);
         setEndTime(end);
     }
+
+    @ManyToOne
+    Appointment appointment;
 }
 

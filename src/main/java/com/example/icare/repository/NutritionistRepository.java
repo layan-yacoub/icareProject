@@ -13,9 +13,5 @@ import java.util.List;
 @Repository//JPA Repository is mainly used for managing the data in a Spring Boot Application
 @Transactional(readOnly = true)
 public interface NutritionistRepository extends JpaRepository<Nutritionist, Long> {
-
-    List<Nutritionist> findByAvailabilitiesDayOfWeekAndAvailabilitiesStartTimeLessThanEqualAndAvailabilitiesEndTimeGreaterThanEqual(
-            DayOfWeek dayOfWeek, LocalTime startTime, LocalTime endTime);
-
-
+    List<Nutritionist> findByStatus(boolean status);
 }

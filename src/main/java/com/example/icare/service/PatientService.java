@@ -6,11 +6,12 @@ import com.example.icare.repository.NutritionistRepository;
 import com.example.icare.repository.PatientRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.AllArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.time.LocalDate;
 import java.time.Period;
 import java.util.List;
+import java.util.Optional;
+
 @AllArgsConstructor
 @Service
 public class PatientService {
@@ -45,14 +46,16 @@ public class PatientService {
         Nutritionist nutritionist = nutritionistRepository.findById(nutritionistId)
                 .orElseThrow(() -> new EntityNotFoundException("Nutritionist not found with ID: " + nutritionistId));
 
+        nutritionist.setTotalRating(nutritionist.getTotalRating()+rating);
         nutritionist.setRatingCounter(nutritionist.getRatingCounter()+1);
-        int totalOfRating = nutritionist.getRating()/nutritionist.getRatingCounter();
-        nutritionist.setRating(totalOfRating);
+        int nutritionistRate = nutritionist.getTotalRating()/nutritionist.getRatingCounter();
+        nutritionist.setRating(nutritionistRate);
 
         patientRepository.save(patient);
         nutritionistRepository.save(nutritionist);
     }// RATE NUTRITIONIST
 
-
-
+    public Optional<Patient> findById(Long patientId) {
+       return patientRepository.findById(patientId);
+    }
 }

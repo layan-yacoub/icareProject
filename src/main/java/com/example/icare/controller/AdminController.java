@@ -5,6 +5,8 @@ import com.example.icare.domain.Patient;
 import com.example.icare.domain.Report;
 import com.example.icare.domain.Restaurant;
 import com.example.icare.service.*;
+import com.example.icare.user.User;
+import com.example.icare.user.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -39,29 +41,51 @@ public class AdminController  {
         return "DELETE:: admin controller";
     }
 
-    private final AdminService adminService;
-    private ReportService reportService;
-    private NutritionistService nutritionistService;
-    private RestaurantService restaurantService;
+
+    private final ReportService reportService;
+    private final NutritionistService nutritionistService;
+    private final RestaurantService restaurantService;
     private final PatientService patientService;
+    private final UserService userService;
 
     @Autowired
-    public AdminController(AdminService adminService, ReportService reportService, NutritionistService nutritionistService, RestaurantService restaurantService, PatientService patientService) {
-        this.adminService = adminService;
+    public AdminController( ReportService reportService, NutritionistService nutritionistService, RestaurantService restaurantService, PatientService patientService, UserService userService) {
         this.reportService = reportService;
         this.nutritionistService = nutritionistService;
         this.restaurantService = restaurantService;
         this.patientService = patientService;
+        this.userService = userService;
+
+    }
+
+    //VIEW SIGN UP REQUEST
+    @GetMapping("/signupRequest/centers") //view list of NON VERIFIED nutritionist(centers)
+    public List<Nutritionist> getAllNonVerifiedCenters (){
+        return nutritionistService.getAllCentersWithStatus(false);
+    }
+
+    @GetMapping("/signupRequest/restaurants") //view list of NON VERIFIED restaurants
+    public List<Restaurant> getAllNonVerifiedRestaurants (){
+        return restaurantService.getAllRestaurantsWithStatus(false);
     }
 
     //VERIFY USERS
-    @PutMapping("/verifyNutritionist") //verify nutritionist
-    public void verifyNutritionist(Nutritionist nutritionist){
+
+    @PutMapping("/verify/nutritionist")  //verify nutritionist
+    public void verifyRestaurant(User user,Nutritionist nutritionist){
+        user.setStatus(true);
         nutritionist.setStatues(true);
+        userService.saveUser(user);
+        nutritionistService.saveNutritionist(nutritionist);
+
     }
-    @PutMapping("/verifyRestaurant")  //verify restaurant
-    public void verifyRestaurant(Restaurant restaurant){
-        restaurant.setStatues(true);
+    @PutMapping("/verify/restaurant")  //verify restaurant
+    public void verifyRestaurant(User user,Restaurant restaurant){
+       user.setStatus(true);
+       restaurant.setStatues(true);
+       userService.saveUser(user);
+       restaurantService.saveRestaurant(restaurant);
+
     }
 
     //VIEW USERS

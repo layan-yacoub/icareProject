@@ -5,16 +5,11 @@ import com.example.icare.domain.Restaurant;
 import com.example.icare.registrationRequest.*;
 import com.example.icare.repository.NutritionistRepository;
 import com.example.icare.repository.PatientRepository;
-//import com.example.icare.registration.token.ConfirmationToken;
-//import com.example.icare.registration.token.ConfirmationTokenService;
 import com.example.icare.repository.RestaurantRepository;
 import jakarta.servlet.http.HttpSession;
 import lombok.AllArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-
-import java.util.ArrayList;
-import java.util.List;
 
 
 @Service
@@ -32,6 +27,8 @@ public class UserService   {
                 signupRequest.getEmail(), passwordEncoder.encode(signupRequest.getPassword()), "PATIENT");
         Patient patient=new Patient( patientRequest.getFirstName(), patientRequest.getLastName(),patientRequest.getDob(), patientRequest.getCity(), patientRequest.getGender(),
                 patientRequest.getWeight(), patientRequest.getHeight(), patientRequest.getDisease(), patientRequest.getLifestyle());
+        user.setStatus(true);
+        patient.setStatues(true);
         userRepository.save(user);
         patientRepository.save(patient);
 
@@ -42,6 +39,8 @@ public class UserService   {
                 signupRequest.getEmail(), passwordEncoder.encode(signupRequest.getPassword()), "NUTRITIONIST");
         Nutritionist nutritionist = new Nutritionist(nutritionistRequest.getFirstName(),nutritionistRequest.getLastName(),nutritionistRequest.getLocation(),nutritionistRequest.getCenterName(),
                 nutritionistRequest.getCenterLicense(),nutritionistRequest.getNutritionistLicense(),nutritionistRequest.getExperience());
+        user.setStatus(false);
+        nutritionist.setStatues(false);
         userRepository.save(user);
         nutritionistRepository.save(nutritionist);
     }
@@ -51,13 +50,15 @@ public class UserService   {
                 signupRequest.getEmail(), passwordEncoder.encode(signupRequest.getPassword()), "RESTAURANT");
         Restaurant restaurant = new Restaurant(restaurantRequest.getPhone_number(),restaurantRequest.getRestaurant_name(),
                 restaurantRequest.getRestaurant_location(),restaurantRequest.getRestaurant_license(),restaurantRequest.getSocial_media());
+        user.setStatus(false);
+        restaurant.setStatues(false);
         userRepository.save(user);
         restaurantRepository.save(restaurant);
     }
 
     public String login(LoginRequest loginRequest) throws InvalidCredentialsException {
         User user = userRepository.findByEmail(loginRequest.getEmail());
-        if (user == null || !user.getPassword().equals(loginRequest.getPassword())) {
+        if (user == null || !user.getPassword().equals(loginRequest.getPassword()) || !user.isStatus()) {
             throw new InvalidCredentialsException("Invalid email or password");
         }
 
@@ -87,10 +88,7 @@ public class UserService   {
         user.setEmail(newEmail);
         userRepository.save(user);
     }
-    public  List<User> findAllUsers() {
-        List<User> users = userRepository.findAll();
-        return new ArrayList<>(users);
-    }
+
     public void saveUser(User user) {
         userRepository.save(user);
     }
