@@ -1,8 +1,8 @@
 package com.example.icare.domain;
+import com.example.icare.appointment.Appointment;
 import jakarta.persistence.*;
 import lombok.*;
-
-import java.sql.Timestamp;
+import java.time.LocalDate;
 
 @Getter
 @Setter
@@ -15,8 +15,10 @@ import java.sql.Timestamp;
    @Id
    @GeneratedValue(strategy = GenerationType.SEQUENCE)
    private Long payment_id; //primary key
-   private Timestamp payment_date;
+   private LocalDate payment_date;
    private double payment_amount;
+
+
    @OneToOne
    @JoinColumn(name = "appointment_id")
    private Appointment appointment;

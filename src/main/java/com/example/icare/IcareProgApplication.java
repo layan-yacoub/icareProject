@@ -3,8 +3,7 @@ package com.example.icare;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
-import com.example.icare.auth.AuthenticationService;
-import com.example.icare.auth.RegisterRequest;
+
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -22,7 +21,7 @@ public class IcareProgApplication {
         SpringApplication.run(IcareProgApplication.class, args);
     }
 
-    @Bean
+    /*@Bean
     public CommandLineRunner commandLineRunner(
             AuthenticationService service
     ) {
@@ -46,6 +45,6 @@ public class IcareProgApplication {
             System.out.println("Manager token: " + service.register(manager).getAccessToken());
 
         };
-    }
+    }*/
 
 }

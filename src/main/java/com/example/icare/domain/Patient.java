@@ -1,14 +1,14 @@
 package com.example.icare.domain;
 
+import com.example.icare.appointment.Appointment;
 import com.example.icare.user.User;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
-
+import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 @Getter
@@ -20,36 +20,62 @@ import java.util.List;
 public class Patient {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
-    private Long patient_id;     // derived from the superclass user_id and concatenated with a character 'P'
-    private String p_first_name;
-    private String p_last_name;
-    private Date dob;
+    @Column(name="patient_id")
+    private Long patient_id;
+    @Column(name="p_first_name")
+    private String firstName;
+    @Column(name="p_last_name")
+    private String lastName;
+    @Column(name="dob")
+    private LocalDate dob;
+    @Column(name="city")
     private String city;
+    @Column(name="gender")
     private String gender;
-    private int weight;
-    private int height;
+    @Column(name="weight")
+    private double weight;
+    @Column(name="height")
+    private double height;
+    @Column(name="disease")
     private String disease;
+    @Column(name="lifestyle")
     private String lifestyle;
+    @Column(name="InBody")
     @Lob
     private byte[] InBody;
-    private String bmi;
+    @Column(name="lab_medical_reports")
     @Lob
-    private byte[] lab_medical_reports;
+    private byte[] labMedicalReports;
+    @Column(name="upload_pdf")
     @Lob
     private byte[] upload_pdf;
-    private boolean statues;
+    @Column(name="statues")
+    private boolean statues =true;
+
     @OneToOne
     @JoinColumn(name = "user_id")
     private User user;
+
     @OneToMany(mappedBy = "patient", cascade = CascadeType.ALL) // One-to-many relationship with appointment
     private List<Appointment>  appointments = new ArrayList<>();
+
     @OneToMany (mappedBy = "patient", cascade = CascadeType.ALL)// One-to-many relationship with message
     private List<Message>  messages = new ArrayList<>();
 
     public Patient() {
     }
 
-
+    public Patient(String firstName, String lastName, LocalDate dob, String city, String gender, double weight, double height, String disease, String lifestyle) {
+        this.firstName=firstName;
+        this.lastName=lastName;
+        this.dob = dob;
+        this.city = city;
+        this.gender = gender;
+        this.weight = weight;
+        this.height = height;
+        this.disease = disease;
+        this.lifestyle = lifestyle;
+    }
 
 }
 
