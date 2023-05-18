@@ -2,16 +2,8 @@ package com.example.icare;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-
-
-import org.springframework.boot.CommandLineRunner;
-import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.context.annotation.Bean;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
-import static com.example.icare.user.Role.ADMIN;
-import static com.example.icare.user.Role.MANAGER;
 
 @SpringBootApplication
 @EnableJpaRepositories

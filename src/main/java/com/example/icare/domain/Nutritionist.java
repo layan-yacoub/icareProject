@@ -1,7 +1,7 @@
 package com.example.icare.domain;
 
 import com.example.icare.appointment.Appointment;
-import com.example.icare.appointment.Availability;
+
 import com.example.icare.user.User;
 import jakarta.persistence.*;
 import lombok.*;
@@ -53,9 +53,7 @@ public class Nutritionist {
     private int ratingCounter =0;
     @Column(name="total_rating")
     private int totalRating=0;
-    //Availability List
-    @OneToMany(mappedBy = "nutritionist", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Availability> availabilities = new ArrayList<>();
+
 
 
     //Appointments Lists

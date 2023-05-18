@@ -11,7 +11,6 @@ import java.util.List;
 public interface AppointmentRepository extends JpaRepository<Appointment,Long> {
     List<Appointment> findByNutritionistId(Long nutritionistId);
 
-    //List<Appointment> findByNutritionistIdAndStartTimeBetween(Timestamp from, Timestamp to);
 
     List<Appointment> findByNutritionistAndStartTimeBetween( Nutritionist nutritionist, LocalDateTime startTime , LocalDateTime endTime);
 

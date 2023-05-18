@@ -5,8 +5,6 @@ import com.example.icare.domain.Patient;
 import jakarta.persistence.*;
 import lombok.*;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
 
 @Setter
 @Getter
@@ -41,8 +39,6 @@ public class Appointment  {
     @JoinColumn(name = "nutritionist_id")
     private Nutritionist nutritionist;
 
-    @OneToMany(mappedBy = "Appointment", cascade = CascadeType.ALL) // One-to-many relationship with appointments
-    private List<Availability> availableAppointments = new ArrayList<>();
     // get data from nutritionist
     @Column(name="amount")
     private double amount= nutritionist.getAmount();
