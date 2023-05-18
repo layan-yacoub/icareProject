@@ -3,6 +3,7 @@ package com.example.icare.appointment;
 import com.example.icare.domain.Nutritionist;
 import com.example.icare.domain.Patient;
 import com.example.icare.domain.Payment;
+import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.time.LocalDate;
@@ -10,7 +11,6 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
-
 @Service
 public class AppointmentService {
     private final AppointmentRepository appointmentRepository;
@@ -26,7 +26,7 @@ public class AppointmentService {
         LocalDateTime startDateTime = date.atTime(LocalTime.from(nutritionist.getStartDateTime()));
         LocalDateTime endDateTime = date.atTime(LocalTime.from(nutritionist.getEndDateTime()));
 
-        List<Appointment> bookedAppointments = appointmentRepository.findByNutritionistAndStartTimeBetween(nutritionist, startDateTime, endDateTime);
+        List<Appointment> bookedAppointments = appointmentRepository.findAvailableAppointments(nutritionist.getBookedAppointments(), startDateTime);
         List<Appointment> availableAppointments = new ArrayList<>();
 
         LocalDateTime currentDateTime = startDateTime;
@@ -92,7 +92,7 @@ public class AppointmentService {
     private boolean isAppointmentAvailable(Nutritionist nutritionist, LocalDateTime startDateTime) {
         LocalDateTime endDateTime = startDateTime.plusHours(1);
 
-        List<Appointment> bookedAppointments = appointmentRepository.findByNutritionistAndStartTimeBetween(nutritionist, startDateTime, endDateTime);
+        List<Appointment> bookedAppointments = appointmentRepository.findAvailableAppointments(nutritionist.getBookedAppointments(), startDateTime);
         return bookedAppointments.isEmpty();
     }
 

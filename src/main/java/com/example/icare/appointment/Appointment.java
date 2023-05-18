@@ -37,9 +37,9 @@ public class Appointment  {
 
     // get data from nutritionist
     @Column(name="amount")
-    private double amount= nutritionist.getAmount();
+    private double amount;
     @Column(name="appointment_link")
-    private String AppointmentLink =nutritionist.getLink();
+    private String AppointmentLink ;
 
     public Appointment( ) {
     }

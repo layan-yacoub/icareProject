@@ -14,8 +14,9 @@ import java.util.List;
 @Entity
 @Table(name = "nutritionist")
 public class Nutritionist {
-    @Id
+
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @Id
     private Long nutritionist_id;
     @Column(name = "n_first_name", nullable = false)
     private String nFirstName;
@@ -66,9 +67,9 @@ public class Nutritionist {
     @OneToMany(mappedBy = "nutritionist", cascade = CascadeType.ALL)  // Relationships with Report entity
     private List<Message> messages = new ArrayList<>();
 
-    @PrimaryKeyJoinColumn
-   @OneToOne
-   private User user;
+    @OneToOne
+    @JoinColumn(name = "user_id")
+    private User user;
     public Nutritionist() { }
 
     public Nutritionist(String firstName,String lastName,String location, String centerName, byte[] centerLicense, byte[] nutritionistLicense, int experience) {

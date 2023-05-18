@@ -7,6 +7,7 @@ import com.example.icare.user.InvalidPasswordException;
 import com.example.icare.user.UserNotFoundException;
 import lombok.AllArgsConstructor;
 import lombok.SneakyThrows;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -16,14 +17,18 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
-@AllArgsConstructor
+
 @Service
 public class NutritionistService {
 
     private final NutritionistRepository nutritionistRepository;
     private final PasswordEncoder passwordEncoder;
 
-
+@Autowired
+    public NutritionistService(NutritionistRepository nutritionistRepository, PasswordEncoder passwordEncoder) {
+        this.nutritionistRepository = nutritionistRepository;
+        this.passwordEncoder = passwordEncoder;
+    }
 
     public List<Nutritionist> getAllCenters (){
         return nutritionistRepository.findAll();

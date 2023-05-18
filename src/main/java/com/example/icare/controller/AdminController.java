@@ -17,31 +17,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/admin")
-@PreAuthorize("hasRole('ADMIN')")
 public class AdminController  {
-
-    @GetMapping
-    @PreAuthorize("hasAuthority('admin:read')")
-    public String get() {
-        return "GET:: admin controller";
-    }
-    @PostMapping
-    @PreAuthorize("hasAuthority('admin:create')")
-    public String post() {
-        return "POST:: admin controller";
-    }
-    @PutMapping
-    @PreAuthorize("hasAuthority('admin:update')")
-    public String put() {
-        return "PUT:: admin controller";
-    }
-    @DeleteMapping
-    @PreAuthorize("hasAuthority('admin:delete')")
-    public String delete() {
-        return "DELETE:: admin controller";
-    }
-
-
     private final ReportService reportService;
     private final NutritionistService nutritionistService;
     private final RestaurantService restaurantService;
