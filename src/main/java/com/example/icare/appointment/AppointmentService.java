@@ -3,11 +3,8 @@ package com.example.icare.appointment;
 import com.example.icare.domain.Nutritionist;
 import com.example.icare.domain.Patient;
 import com.example.icare.domain.Payment;
-import com.example.icare.repository.NutritionistRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -72,7 +69,7 @@ public class AppointmentService {
         appointment.setBooked_date(LocalDateTime.now());
 
         // Perform any necessary validation or business logic for booking the appointment
-        boolean paymentSuccess = performPaymentLogic(appointment.getAppointment_id(),appointment.getAmount());
+        boolean paymentSuccess = performPaymentLogic(appointment.getAmount());
         if (paymentSuccess) {
             appointmentRepository.save(appointment);
             return true;
@@ -83,10 +80,11 @@ public class AppointmentService {
     }
 
     //payment logic for the booking in our case we assume that the payment is process is always accepted
-    private boolean performPaymentLogic(double appointment_id, double appointmentAmount) {
+    private boolean performPaymentLogic(double appointmentAmount) {
         Payment payment= new Payment();
         payment.setPayment_amount(appointmentAmount);
         payment.setPayment_date(LocalDate.now());
+
 
         return true;
     }

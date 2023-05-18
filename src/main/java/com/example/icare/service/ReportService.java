@@ -5,7 +5,6 @@ import com.example.icare.repository.ReportRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -22,7 +21,7 @@ public class ReportService {
         return reportRepository.save(report);
     }
 
-// view, delete, and resolve report
+   // view, delete, and resolve report
 
     public List<Report> getAllReports() {
         return reportRepository.findAll();
@@ -44,10 +43,9 @@ public class ReportService {
         }
     }
 
-
     public void resolveReport(Long reportId) {
 
-        Optional<Report> optionalReport = reportRepository.findById((long) reportId);
+        Optional<Report> optionalReport = reportRepository.findById(reportId);
         if (optionalReport.isPresent()) {
             Report report = optionalReport.get();
             report.setVisible(false);

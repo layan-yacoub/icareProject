@@ -26,6 +26,8 @@ public class Patient {
     private String firstName;
     @Column(name="p_last_name")
     private String lastName;
+    @Column(name="email")
+    private String email;
     @Column(name="dob")
     private LocalDate dob;
     @Column(name="city")
@@ -50,7 +52,7 @@ public class Patient {
     @Lob
     private byte[] upload_pdf;
     @Column(name="statues")
-    private boolean statues =true;
+    private boolean status =true;
 
     @OneToOne
     @JoinColumn(name = "user_id")
@@ -65,7 +67,8 @@ public class Patient {
     public Patient() {
     }
 
-    public Patient(String firstName, String lastName, LocalDate dob, String city, String gender, double weight, double height, String disease, String lifestyle) {
+    public Patient(String email, String firstName, String lastName, LocalDate dob, String city, String gender, double weight, double height, String disease, String lifestyle) {
+        this.email=email;
         this.firstName=firstName;
         this.lastName=lastName;
         this.dob = dob;

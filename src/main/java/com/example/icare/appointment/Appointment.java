@@ -4,8 +4,6 @@ import com.example.icare.domain.Nutritionist;
 import com.example.icare.domain.Patient;
 import jakarta.persistence.*;
 import lombok.*;
-
-import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;

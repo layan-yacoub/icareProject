@@ -21,6 +21,8 @@ public class Nutritionist {
     private String nFirstName;
     @Column(name = "n_last_name", nullable = false)
     private String nLastName;
+    @Column(name="email")
+    private String email;
     @Column(name = "location", nullable = false)
     private String location;
     @Column(name = "center_name", nullable = false)
@@ -44,7 +46,7 @@ public class Nutritionist {
     @Column(name = "link")
     private String link;
     @Column(name = "statues")
-    private boolean statues = true;
+    private boolean status = true;
     @Column(name="rating")
     private int rating ;
     @Column(name="rating_counter")
@@ -82,4 +84,14 @@ public class Nutritionist {
         this.experience = experience;
     }
 
+    public Nutritionist(String nFirstName, String nLastName, String email, String location, String centerName, byte[] centerLicense, byte[] nutritionistLicense, int experience) {
+        this.nFirstName = nFirstName;
+        this.nLastName = nLastName;
+        this.email = email;
+        this.location = location;
+        this.centerName = centerName;
+        this.centerLicense = centerLicense;
+        this.nutritionistLicense = nutritionistLicense;
+        this.experience = experience;
+    }
 }

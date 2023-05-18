@@ -4,8 +4,11 @@ import com.example.icare.domain.Nutritionist;
 import com.example.icare.domain.Patient;
 import com.example.icare.repository.NutritionistRepository;
 import com.example.icare.repository.PatientRepository;
+import com.example.icare.user.InvalidPasswordException;
+import com.example.icare.user.UserNotFoundException;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.AllArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import java.time.LocalDate;
 import java.time.Period;
@@ -15,7 +18,7 @@ import java.util.Optional;
 @AllArgsConstructor
 @Service
 public class PatientService {
-
+    private final PasswordEncoder passwordEncoder;
     private final PatientRepository patientRepository;
     private final NutritionistRepository nutritionistRepository;
 
@@ -57,5 +60,22 @@ public class PatientService {
 
     public Optional<Patient> findById(Long patientId) {
        return patientRepository.findById(patientId);
+    }
+
+    public Patient getPatientByEmail(String email) {
+        return  patientRepository.findByEmail(email);
+    }
+
+    public void changeEmail(Long patient_id, String password, String newEmail)
+            throws UserNotFoundException, InvalidPasswordException {
+        Patient patient = patientRepository.findById(patient_id)
+                .orElseThrow(() -> new UserNotFoundException("User not found"));
+
+        if (! passwordEncoder.matches(password,patient.getUser().getPassword())){
+            throw new InvalidPasswordException("Invalid password");
+        }
+
+        patient.setEmail(newEmail);
+        patientRepository.save(patient);
     }
 }

@@ -1,22 +1,23 @@
 package com.example.icare.controller;
 
 import com.example.icare.appointment.Appointment;
+import com.example.icare.appointment.Availability;
 import com.example.icare.appointment.AvailabilityRequest;
 import com.example.icare.domain.Nutritionist;
 import com.example.icare.domain.Patient;
 import com.example.icare.repository.PatientRepository;
 import com.example.icare.service.NutritionistService;
 import com.example.icare.service.PatientService;
+import com.example.icare.user.InvalidPasswordException;
+import com.example.icare.user.UserNotFoundException;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.server.ResponseStatusException;
-import java.time.DayOfWeek;
-import java.time.LocalTime;
-import java.time.Month;
-import java.time.YearMonth;
+
+import java.time.*;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -28,6 +29,7 @@ public class NutritionistController {
     private final NutritionistService nutritionistService;
     private final PatientService patientService;
     private final PatientRepository patientRepository;
+
 
     @Autowired
     public NutritionistController(NutritionistService nutritionistService, PatientService patientService, PatientRepository patientRepository) {
@@ -54,20 +56,7 @@ public class NutritionistController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
     }
-    @PostMapping("/{nutritionist_id}/availability") //  add an available time slot for a specific date
-    public ResponseEntity<String> addAvailability(
-            @PathVariable("nutritionist_id") Long nutritionistId,
-            @RequestBody AvailabilityRequest availabilityRequest) {
-        nutritionistService.addAvailability(nutritionistId, availabilityRequest);
-        return ResponseEntity.ok("Availability added successfully");
-    }
-    @DeleteMapping("/{nutritionist_id}/availability")// Endpoint to remove an available time slot for a specific date
-    public ResponseEntity<String> removeAvailability(
-            @PathVariable("nutritionist_id") Long nutritionistId,
-            @RequestBody AvailabilityRequest availabilityRequest) {
-        nutritionistService.removeAvailability(nutritionistId, availabilityRequest);
-        return ResponseEntity.ok("Availability removed successfully");
-    }
+
 
     @GetMapping("/{nutritionist_id}/generatedAppointments") //get ALL the generated appointments for a specific nutritionist
     public ResponseEntity<List<Appointment>> getGeneratedAppointments(@PathVariable Long nutritionist_id) {
@@ -159,6 +148,23 @@ public class NutritionistController {
         response.put("lifestyle", patient.getLifestyle());
 
         return ResponseEntity.ok(response);
+    }
+
+
+    //CHANGE EMAIL
+
+    @PutMapping("/{nutritionist_id}/email") //change email
+    public ResponseEntity<String> changeEmail(@PathVariable("nutritionist_id") Long nutritionistId,
+                                              @RequestParam String password,
+                                              @RequestParam String newEmail) {
+        try {
+            nutritionistService.changeEmail(nutritionistId, password, newEmail);
+            return ResponseEntity.ok("Email changed successfully");
+        } catch (InvalidPasswordException e) {
+            return ResponseEntity.badRequest().body("Invalid password");
+        } catch (UserNotFoundException e) {
+            return ResponseEntity.notFound().build();
+        }
     }
 
 

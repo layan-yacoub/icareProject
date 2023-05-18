@@ -1,13 +1,14 @@
 package com.example.icare.service;
 
 import com.example.icare.appointment.Appointment;
-import com.example.icare.appointment.Availability;
-import com.example.icare.appointment.AvailabilityRequest;
 import com.example.icare.domain.Nutritionist;
 import com.example.icare.repository.NutritionistRepository;
+import com.example.icare.user.InvalidPasswordException;
+import com.example.icare.user.UserNotFoundException;
+import lombok.AllArgsConstructor;
 import lombok.SneakyThrows;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.crossstore.ChangeSetPersister;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.*;
@@ -15,16 +16,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
-
+@AllArgsConstructor
 @Service
 public class NutritionistService {
 
     private final NutritionistRepository nutritionistRepository;
+    private final PasswordEncoder passwordEncoder;
 
-    @Autowired
-    public NutritionistService(NutritionistRepository nutritionistRepository) {
-        this.nutritionistRepository = nutritionistRepository;
-    }
+
 
     public List<Nutritionist> getAllCenters (){
         return nutritionistRepository.findAll();
@@ -107,56 +106,21 @@ public class NutritionistService {
         return nutritionistRepository.findById(nutritionistId);
     }
 
-    //add one day for available appointments
-    public void addAvailability(Long nutritionistId, AvailabilityRequest availabilityRequest) {
-        Nutritionist nutritionist;
-        try {
-            nutritionist = getNutritionistById(nutritionistId);
-        } catch (ChangeSetPersister.NotFoundException e) {
-            throw new RuntimeException("Nutritionist Not Found");
-        }
-        Availability availability = createAvailabilityFromRequest(availabilityRequest);
-        nutritionist.getAvailabilities().add(availability);
-        nutritionistRepository.save(nutritionist);
-    }
-    //remove one day for available appointments
-    public void removeAvailability(Long nutritionistId, AvailabilityRequest availabilityRequest) {
-        Nutritionist nutritionist ;
-        try {
-            nutritionist = getNutritionistById(nutritionistId);
-        } catch (ChangeSetPersister.NotFoundException e) {
-            throw new RuntimeException("Nutritionist Not Found");
-        }
-        Availability availability = createAvailabilityFromRequest(availabilityRequest);
-        nutritionist.getAppointments().remove(availability);
-        nutritionistRepository.save(nutritionist);
+
+
+    public Optional<Nutritionist> getNutritionistById(Long nutritionistId)  {
+        return nutritionistRepository.findById(nutritionistId);
     }
 
-    private Nutritionist getNutritionistById(Long nutritionistId) throws ChangeSetPersister.NotFoundException {
-        return nutritionistRepository.findById(nutritionistId)
-                .orElseThrow(ChangeSetPersister.NotFoundException::new);
-    }
-
-    private Availability createAvailabilityFromRequest(AvailabilityRequest availabilityRequest) {
-        LocalDate availableDate = availabilityRequest.getAvailableDate();
-        LocalTime startTime = availabilityRequest.getStartTime();
-        LocalTime endTime = availabilityRequest.getEndTime();
-
-        return new Availability(availableDate, startTime, endTime);
-    }
 
     public int getRating(Long nutritionistId) {
         int rate;
-        try {
-            rate = getNutritionistById(nutritionistId).getRating();
-        } catch (ChangeSetPersister.NotFoundException e) {
-            throw new RuntimeException("Nutritionist has not been rated before");
-        }
+        rate = nutritionistRepository.getNutritionistById(nutritionistId).getRating();
         return rate;
     }
 
-    public void setAmountOfAppointments(Long id ,double amount) throws ChangeSetPersister.NotFoundException {
-        Nutritionist nutritionist = getNutritionistById(id);
+    public void setAmountOfAppointments(Long id ,double amount) {
+        Nutritionist nutritionist = nutritionistRepository.getNutritionistById(id);
         nutritionist.setAmount(amount);
         nutritionistRepository.save(nutritionist);
     }
@@ -166,5 +130,26 @@ public class NutritionistService {
 
     public List<Nutritionist> getAllCentersWithStatus(boolean status) {
         return nutritionistRepository.findByStatus(status);
+    }
+
+    public Nutritionist getNutritionistByEmail(String email) {
+        return nutritionistRepository.findByEmail(email);
+    }
+
+    public void changeEmail(Long nutritionistId, String password, String newEmail) {
+            Nutritionist nutritionist = nutritionistRepository.findById(nutritionistId)
+                    .orElseThrow(() -> new UserNotFoundException("User not found"));
+
+            if (! passwordEncoder.matches(password,nutritionist.getUser().getPassword())){
+                throw new InvalidPasswordException("Invalid password");
+            }
+
+            nutritionist.setEmail(newEmail);
+            nutritionistRepository.save(nutritionist);
+
+    }
+
+    public void save(Nutritionist nutritionist) {
+        nutritionistRepository.save(nutritionist);
     }
 }

@@ -10,6 +10,8 @@ import java.util.Date;
 public class PatientRequest {
     private String firstName;
     private String lastName;
+    private String email  ;
+    private String password ;
     private String city ;
     private LocalDate dob;
     private String gender;

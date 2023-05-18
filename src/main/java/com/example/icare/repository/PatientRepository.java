@@ -9,5 +9,6 @@ import org.springframework.transaction.annotation.Transactional;
 @Repository
 @Transactional(readOnly = true)
 public interface PatientRepository extends JpaRepository<Patient, Long> {
-    // Optional <Patient> findByEmail(String email);
+   // void findByEmail(String email);
+     Patient findByEmail(String email);
 }

@@ -8,6 +8,8 @@ import lombok.Data;
 public class NutritionistRequest {
     private String firstName;
     private String lastName;
+    private String email  ;
+    private String password ;
     private String location ;
     private String centerName;
     private byte[] centerLicense ;

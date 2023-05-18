@@ -7,6 +7,8 @@ import lombok.Data;
 @AllArgsConstructor
 public class RestaurantRequest {
 
+    private String email;
+    private String password;
     private String phone_number ;
     private String restaurant_name ;
     private String restaurant_location ;

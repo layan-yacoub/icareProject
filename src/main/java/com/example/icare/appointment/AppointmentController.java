@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 @AllArgsConstructor
@@ -52,6 +53,10 @@ public class AppointmentController  {
 
         Nutritionist nutritionist = nutritionistOptional.get();
         List<Appointment> availableAppointments = appointmentService.getAvailableAppointments(nutritionist, date);
+
+        if(availableAppointments==null)
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+
         return ResponseEntity.ok(availableAppointments);
     }
 
@@ -86,6 +91,9 @@ public class AppointmentController  {
         Nutritionist nutritionist = nutritionistOptional.get();
         List<Appointment> appointments = appointmentService.findByNutritionist(nutritionist);
 
+        if(appointments==null)
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+
         return ResponseEntity.ok(appointments);
     }
 
@@ -99,6 +107,9 @@ public class AppointmentController  {
 
         Patient patient = patientOptional.get();
         List<Appointment> appointments = appointmentService.getAppointmentsByPatient(patient);
+
+        if(appointments==null)
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
 
         return ResponseEntity.ok(appointments);
     }
@@ -117,7 +128,7 @@ public class AppointmentController  {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
 
-        appointmentService.deleteAppointmentById(appointment_id);
+        Objects.requireNonNull(appointmentService).deleteAppointmentById(appointment_id);
         return ResponseEntity.status(HttpStatus.ACCEPTED).build();
     }
 

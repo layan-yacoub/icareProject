@@ -73,16 +73,15 @@ public class AdminController  {
 
     @PutMapping("/verify/nutritionist")  //verify nutritionist
     public void verifyRestaurant(User user,Nutritionist nutritionist){
-        user.setStatus(true);
-        nutritionist.setStatues(true);
+        nutritionist.setStatus(true);
         userService.saveUser(user);
         nutritionistService.saveNutritionist(nutritionist);
 
     }
     @PutMapping("/verify/restaurant")  //verify restaurant
     public void verifyRestaurant(User user,Restaurant restaurant){
-       user.setStatus(true);
-       restaurant.setStatues(true);
+
+       restaurant.setStatus(true);
        userService.saveUser(user);
        restaurantService.saveRestaurant(restaurant);
 

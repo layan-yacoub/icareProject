@@ -1,6 +1,12 @@
 package com.example.icare.user;
 
+import com.example.icare.domain.Nutritionist;
+import com.example.icare.domain.Patient;
+import com.example.icare.domain.Restaurant;
 import com.example.icare.registrationRequest.*;
+import com.example.icare.service.NutritionistService;
+import com.example.icare.service.PatientService;
+import com.example.icare.service.RestaurantService;
 import jakarta.servlet.http.HttpSession;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -12,34 +18,51 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api/users")
 public class UserController {
 
-    private UserService userService;
+    private final UserService userService;
+    private final PatientService patientService;
+    private final NutritionistService nutritionistService;
+    private final RestaurantService restaurantService;
 
     @PostMapping("/signup/patient")// PATIENT SIGNUP
-    public ResponseEntity<String> signupPatient(@RequestBody UserSignupRequest signupRequest, @RequestBody PatientRequest patientRequest) {
-        userService.signupPatient(signupRequest ,patientRequest);
+    public ResponseEntity<String> signupPatient( @RequestBody PatientRequest patientRequest) {
+        userService.signupPatient(patientRequest);
         return ResponseEntity.ok("Patient signup successful");
     }
 
     @PostMapping("/signup/nutritionist") // NUTRITIONIST SIGNUP
-    public ResponseEntity<String> signupNutritionist(@RequestBody UserSignupRequest signupRequest , @RequestBody NutritionistRequest nutritionistRequest) {
-        userService.signupNutritionist(signupRequest,nutritionistRequest);
+    public ResponseEntity<String> signupNutritionist(@RequestBody NutritionistRequest nutritionistRequest) {
+        userService.signupNutritionist(nutritionistRequest);
         return ResponseEntity.ok("Nutritionist signup successful");
     }
 
     @PostMapping("/signup/restaurant") //RESTAURANT SIGNUP
-    public ResponseEntity<String> signupRestaurant(@RequestBody UserSignupRequest signupRequest , @RequestBody RestaurantRequest restaurantRequest) {
-        userService.signupRestaurant(signupRequest,restaurantRequest);
+    public ResponseEntity<String> signupRestaurant(@RequestBody RestaurantRequest restaurantRequest) {
+        userService.signupRestaurant(restaurantRequest);
         return ResponseEntity.ok("Restaurant signup successful");
     }
 
     @PostMapping("/login") //LOGIN
-    public ResponseEntity<?> login(@RequestBody LoginRequest loginRequest) {
+    public ResponseEntity<?>login(@RequestBody LoginRequest loginRequest) {
         try {
-            String redirectUrl = userService.login(loginRequest);
-            return ResponseEntity.ok(redirectUrl);
-        } catch (InvalidCredentialsException e) {
+            if(patientService.getPatientByEmail(loginRequest.getEmail())!=null){
+            Patient patient=userService.loginPatient(loginRequest);
+                return ResponseEntity.ok(patient);
+            }
+            else if (nutritionistService.getNutritionistByEmail(loginRequest.getEmail())!=null){
+                Nutritionist nutritionist=userService.loginNutritionist(loginRequest);
+                return ResponseEntity.ok(nutritionist);
+
+            } else if (restaurantService.getRestaurantByEmail(loginRequest.getEmail())!=null) {
+                Restaurant restaurant=userService.loginRestaurant(loginRequest);
+                return ResponseEntity.ok(restaurant);
+            }
+            else return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid email or password");
+        }
+
+         catch (InvalidCredentialsException e) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid email or password");
         }
+
     }
 
     @PostMapping("/logout") //LOGOUT
@@ -48,19 +71,7 @@ public class UserController {
         return ResponseEntity.ok("Logout successful");
     }
 
-    @PutMapping("/{user_id}/email") //change email
-    public ResponseEntity<String> changeEmail(@PathVariable("user_id") Long userId,
-                                              @RequestParam String password,
-                                              @RequestParam String newEmail) {
-        try {
-            userService.changeEmail(userId, password, newEmail);
-            return ResponseEntity.ok("Email changed successfully");
-        } catch (InvalidPasswordException e) {
-            return ResponseEntity.badRequest().body("Invalid password");
-        } catch (UserNotFoundException e) {
-            return ResponseEntity.notFound().build();
-        }
-    }
+
 
 }
 

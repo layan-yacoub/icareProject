@@ -14,4 +14,8 @@ import java.util.List;
 @Transactional(readOnly = true)
 public interface NutritionistRepository extends JpaRepository<Nutritionist, Long> {
     List<Nutritionist> findByStatus(boolean status);
+
+    Nutritionist findByEmail(String email);
+
+    Nutritionist getNutritionistById(Long id);
 }

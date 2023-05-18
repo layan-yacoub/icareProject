@@ -7,6 +7,8 @@ import com.example.icare.repository.PatientRepository;
 import com.example.icare.service.NutritionistService;
 import com.example.icare.service.PatientService;
 import com.example.icare.service.RestaurantService;
+import com.example.icare.user.InvalidPasswordException;
+import com.example.icare.user.UserNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -95,7 +97,6 @@ public class PatientController {
     }
 
     //DELETE FILES
-
     @DeleteMapping("/{patient_id}/inbody") //delete in-body file
     public ResponseEntity<?> deleteInbody(@PathVariable("patient_id") Long patientId) {
         try {
@@ -153,8 +154,6 @@ public class PatientController {
     }
 
 
-
-
     //RATE-NUTRITIONIST
     @PostMapping("/{patient_id}/nutritionists/{nutritionist_id}/rate") //the patient rate the nutritionist
     public ResponseEntity<String> rateNutritionist(
@@ -166,6 +165,19 @@ public class PatientController {
         return ResponseEntity.ok("Rating saved successfully.");
     }
 
+    //CHANGE EMAIL
 
-
+    @PutMapping("/{patient_id}/email") //change email
+    public ResponseEntity<String> changeEmail(@PathVariable("patient_id") Long patientId,
+                                              @RequestParam String password,
+                                              @RequestParam String newEmail) {
+        try {
+            patientService.changeEmail(patientId, password, newEmail);
+            return ResponseEntity.ok("Email changed successfully");
+        } catch (InvalidPasswordException e) {
+            return ResponseEntity.badRequest().body("Invalid password");
+        } catch (UserNotFoundException e) {
+            return ResponseEntity.notFound().build();
+        }
+    }
 }

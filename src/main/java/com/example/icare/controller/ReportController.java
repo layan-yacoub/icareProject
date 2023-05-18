@@ -17,6 +17,7 @@ public class ReportController {
     public ReportController(ReportService reportService) {
         this.reportService = reportService;
     }
+
     // save report
     @PostMapping("/save")
     public ResponseEntity<Report> saveReport(@RequestBody Report report) {

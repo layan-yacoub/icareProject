@@ -12,4 +12,5 @@ import java.util.List;
 public interface RestaurantRepository extends JpaRepository<Restaurant, Long> {
     List<Restaurant> findByStatus(boolean status);
 
+    Restaurant findByEmail(String email);
 }
