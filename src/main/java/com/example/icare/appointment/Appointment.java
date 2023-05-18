@@ -6,14 +6,10 @@ import jakarta.persistence.*;
 import lombok.*;
 import java.time.LocalDateTime;
 
-@Setter
-@Getter
-@EqualsAndHashCode
-@ToString
+@Data
 @AllArgsConstructor
-@NoArgsConstructor
-@Entity
 @Table(name="appointment")
+@Entity
 public class Appointment  {
 
     @Id
@@ -45,8 +41,6 @@ public class Appointment  {
     @Column(name="appointment_link")
     private String AppointmentLink =nutritionist.getLink();
 
-
-
-
-
+    public Appointment( ) {
+    }
 }

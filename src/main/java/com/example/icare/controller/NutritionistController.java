@@ -1,8 +1,7 @@
 package com.example.icare.controller;
 
 import com.example.icare.appointment.Appointment;
-import com.example.icare.appointment.Availability;
-import com.example.icare.appointment.AvailabilityRequest;
+
 import com.example.icare.domain.Nutritionist;
 import com.example.icare.domain.Patient;
 import com.example.icare.repository.PatientRepository;

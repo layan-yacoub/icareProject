@@ -5,8 +5,9 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
 
-@SpringBootApplication
 @EnableJpaRepositories
+@SpringBootApplication
+
 public class IcareProgApplication {
 
     public static void main(String[] args) {

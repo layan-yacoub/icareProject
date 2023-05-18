@@ -9,7 +9,7 @@ import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
-import org.springframework.beans.factory.annotation.Autowired;
+
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.*;
 import java.time.LocalDate;
@@ -18,7 +18,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
-@AllArgsConstructor
+
 @RequiredArgsConstructor
 @NoArgsConstructor(force = true)
 @ControllerAdvice
@@ -33,13 +33,7 @@ public class AppointmentController  {
     private final AppointmentRepository appointmentRepository;
 
     private final PatientService patientService;
-    @Autowired
-    public AppointmentController(NutritionistRepository nutritionistRepository, AppointmentService appointmentService, AppointmentRepository appointmentRepository, PatientService patientService) {
-        this.nutritionistRepository = nutritionistRepository;
-        this.appointmentService = appointmentService;
-        this.appointmentRepository = appointmentRepository;
-        this.patientService = patientService;
-    }
+
 
     @SneakyThrows
     @GetMapping("/available/{nutritionist_id}")  // to show the available appointments for a specific nutritionist in a specific date

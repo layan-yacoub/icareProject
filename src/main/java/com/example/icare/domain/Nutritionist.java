@@ -66,9 +66,8 @@ public class Nutritionist {
     @OneToMany(mappedBy = "nutritionist", cascade = CascadeType.ALL)  // Relationships with Report entity
     private List<Message> messages = new ArrayList<>();
 
-   @Column(name = "user_id", insertable = false, updatable = false)
-   @OneToOne(fetch = FetchType.LAZY)
-   @PrimaryKeyJoinColumn
+    @PrimaryKeyJoinColumn
+   @OneToOne
    private User user;
     public Nutritionist() { }
 
