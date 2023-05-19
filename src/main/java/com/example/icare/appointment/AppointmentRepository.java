@@ -18,9 +18,9 @@ public interface AppointmentRepository extends JpaRepository<Appointment,Long> {
 
     //List<Appointment> findByNutritionistAndStartTimeBetween( Nutritionist nutritionist, LocalDateTime startTime , LocalDateTime endTime);
 
-    List<Appointment> findByNutritionistAndStartTimeGreaterThanEqual(Nutritionist nutritionist, LocalDateTime startTime);
+   // List<Appointment> findByNutritionistAndStartTimeGreaterThanEqual(Nutritionist nutritionist, LocalDateTime startTime);
 
-    List<Appointment> findByNutritionistAndEndTimeLessThanEqual( Nutritionist nutritionist, LocalDateTime endTime);
+    //List<Appointment> findByNutritionistAndEndTimeLessThanEqual( Nutritionist nutritionist, LocalDateTime endTime);
 
     List<Appointment> findByNutritionist(Nutritionist nutritionist);
 

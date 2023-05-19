@@ -24,21 +24,21 @@ public class UserController {
     private final RestaurantService restaurantService;
 
     @PostMapping("/signup/patient")// PATIENT SIGNUP
-    public ResponseEntity<String> signupPatient( @RequestBody PatientRequest patientRequest) {
-        userService.signupPatient(patientRequest);
-        return ResponseEntity.ok("Patient signup successful");
+    public ResponseEntity<Patient> signupPatient(@RequestBody PatientRequest patientRequest) {
+        Patient patient= userService.signupPatient(patientRequest);
+        return ResponseEntity.ok(patient);
     }
 
     @PostMapping("/signup/nutritionist") // NUTRITIONIST SIGNUP
-    public ResponseEntity<String> signupNutritionist(@RequestBody NutritionistRequest nutritionistRequest) {
-        userService.signupNutritionist(nutritionistRequest);
-        return ResponseEntity.ok("Nutritionist signup successful");
+    public ResponseEntity<Nutritionist> signupNutritionist(@RequestBody NutritionistRequest nutritionistRequest) {
+      Nutritionist nutritionist=  userService.signupNutritionist(nutritionistRequest);
+        return ResponseEntity.ok(nutritionist);
     }
 
     @PostMapping("/signup/restaurant") //RESTAURANT SIGNUP
-    public ResponseEntity<String> signupRestaurant(@RequestBody RestaurantRequest restaurantRequest) {
-        userService.signupRestaurant(restaurantRequest);
-        return ResponseEntity.ok("Restaurant signup successful");
+    public ResponseEntity<Restaurant> signupRestaurant(@RequestBody RestaurantRequest restaurantRequest) {
+      Restaurant restaurant=  userService.signupRestaurant(restaurantRequest);
+        return ResponseEntity.ok(restaurant);
     }
 
     @PostMapping("/login") //LOGIN

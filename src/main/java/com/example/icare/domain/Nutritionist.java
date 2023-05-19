@@ -29,11 +29,11 @@ public class Nutritionist {
     @Column(name = "center_name", nullable = false)
     private String centerName;
     @Column(name = "center_license", nullable = false)
-    @Lob
-    private byte[] centerLicense;
+
+    private String centerLicense;
     @Column(name = "nutritionist_license", nullable = false)
-    @Lob
-    private byte[] nutritionistLicense;
+
+    private String nutritionistLicense;
     @Column(name = "experience")
     private int experience;
     @Column(name = "amount")
@@ -58,7 +58,7 @@ public class Nutritionist {
 
 
     //Appointments Lists
-    @OneToMany(mappedBy = "nutritionist", cascade = CascadeType.ALL) // One-to-many relationship with appointments
+    @OneToMany(mappedBy = "nutritionist",fetch = FetchType.EAGER, cascade = CascadeType.ALL) // One-to-many relationship with appointments
     private List<Appointment> appointments = new ArrayList<>();
     @OneToMany(mappedBy = "nutritionist", cascade = CascadeType.ALL)
     private List<Appointment> bookedAppointments = new ArrayList<>();
@@ -72,7 +72,7 @@ public class Nutritionist {
     private User user;
     public Nutritionist() { }
 
-    public Nutritionist(String firstName,String lastName,String location, String centerName, byte[] centerLicense, byte[] nutritionistLicense, int experience) {
+    public Nutritionist(String firstName,String lastName,String location, String centerName, String centerLicense, String nutritionistLicense, int experience) {
         this.nFirstName=firstName;
         this.nLastName=lastName;
         this.location = location;
@@ -82,7 +82,7 @@ public class Nutritionist {
         this.experience = experience;
     }
 
-    public Nutritionist(String nFirstName, String nLastName, String email, String location, String centerName, byte[] centerLicense, byte[] nutritionistLicense, int experience) {
+    public Nutritionist(String nFirstName, String nLastName, String email, String location, String centerName, String centerLicense,String nutritionistLicense, int experience) {
         this.nFirstName = nFirstName;
         this.nLastName = nLastName;
         this.email = email;

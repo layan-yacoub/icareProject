@@ -8,17 +8,18 @@ import com.example.icare.user.InvalidPasswordException;
 import com.example.icare.user.UserNotFoundException;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.AllArgsConstructor;
-import org.springframework.security.crypto.password.PasswordEncoder;
+
 import org.springframework.stereotype.Service;
 import java.time.LocalDate;
 import java.time.Period;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 @AllArgsConstructor
 @Service
 public class PatientService {
-    private final PasswordEncoder passwordEncoder;
+
     private final PatientRepository patientRepository;
     private final NutritionistRepository nutritionistRepository;
 
@@ -71,7 +72,7 @@ public class PatientService {
         Patient patient = patientRepository.findById(patient_id)
                 .orElseThrow(() -> new UserNotFoundException("User not found"));
 
-        if (! passwordEncoder.matches(password,patient.getUser().getPassword())){
+        if (Objects.equals(password, patient.getUser().getPassword())){
             throw new InvalidPasswordException("Invalid password");
         }
 

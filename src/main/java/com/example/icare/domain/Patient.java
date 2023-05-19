@@ -42,7 +42,7 @@ public class Patient {
     private String disease;
     @Column(name="lifestyle")
     private String lifestyle;
-    @Column(name="InBody")
+    @Column(name="inbody")
     @Lob
     private byte[] InBody;
     @Column(name="lab_medical_reports")

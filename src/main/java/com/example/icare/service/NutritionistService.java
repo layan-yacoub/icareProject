@@ -5,16 +5,15 @@ import com.example.icare.domain.Nutritionist;
 import com.example.icare.repository.NutritionistRepository;
 import com.example.icare.user.InvalidPasswordException;
 import com.example.icare.user.UserNotFoundException;
-import lombok.AllArgsConstructor;
 import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.crossstore.ChangeSetPersister;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -22,12 +21,11 @@ import java.util.stream.Collectors;
 public class NutritionistService {
 
     private final NutritionistRepository nutritionistRepository;
-    private final PasswordEncoder passwordEncoder;
+
 
 @Autowired
-    public NutritionistService(NutritionistRepository nutritionistRepository, PasswordEncoder passwordEncoder) {
+    public NutritionistService(NutritionistRepository nutritionistRepository) {
         this.nutritionistRepository = nutritionistRepository;
-        this.passwordEncoder = passwordEncoder;
     }
 
     public List<Nutritionist> getAllCenters (){
@@ -58,12 +56,12 @@ public class NutritionistService {
         // Loop through each day of the month
         for (int day = 1; day <= numDays; day++) {
             LocalDate date = LocalDate.of(year, month, day);
-
+            System.out.println(day);
             // Check if the day is excluded
             if (excludedDays.contains(date.getDayOfWeek())) {
                 continue;  // Skip the excluded day
             }
-
+            System.out.println(day);
             // Loop through each hour from start time to end time
             LocalDateTime currentDateTime = LocalDateTime.of(date, startTime);
             while (currentDateTime.isBefore(LocalDateTime.of(date, endTime))) {
@@ -76,6 +74,7 @@ public class NutritionistService {
                 generatedAppointments.add(appointment);
 
                 currentDateTime = currentDateTime.plusHours(1);
+                System.out.println("log"+day);
             }
         }
         nutritionistRepository.save(nutritionist); // Save the nutritionist with the generated appointments
@@ -145,7 +144,7 @@ public class NutritionistService {
             Nutritionist nutritionist = nutritionistRepository.findById(nutritionistId)
                     .orElseThrow(() -> new UserNotFoundException("User not found"));
 
-            if (! passwordEncoder.matches(password,nutritionist.getUser().getPassword())){
+            if (! (Objects.equals(password, nutritionist.getUser().getPassword()))){
                 throw new InvalidPasswordException("Invalid password");
             }
 

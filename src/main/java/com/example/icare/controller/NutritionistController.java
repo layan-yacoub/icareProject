@@ -4,6 +4,7 @@ import com.example.icare.appointment.Appointment;
 
 import com.example.icare.domain.Nutritionist;
 import com.example.icare.domain.Patient;
+import com.example.icare.registrationRequest.GenerateMonthlyAppointments;
 import com.example.icare.repository.PatientRepository;
 import com.example.icare.service.NutritionistService;
 import com.example.icare.service.PatientService;
@@ -38,9 +39,10 @@ public class NutritionistController {
     }
 
     // APPOINTMENT SCHEDULE
-    @PostMapping("/{nutritionist_id}/generateMonthlyAppointments") ///generateMonthlyAppointments and exclude a list of days of the week
-    public ResponseEntity<List<Appointment>> generateMonthlyAppointments(@PathVariable Long nutritionist_id, int year,
-                                                                         Month month, LocalTime startTime, LocalTime endTime, List<DayOfWeek> excludedDays) {
+    @PostMapping("/generateMonthlyAppointments") ///generateMonthlyAppointments and exclude a list of days of the week
+    public ResponseEntity<List<Appointment>> generateMonthlyAppointments(@RequestParam ("nutritionist_id")Long nutritionist_id,@RequestBody GenerateMonthlyAppointments generateMonthlyAppointments) {
+
+        System.out.println(generateMonthlyAppointments);
         Optional<Nutritionist> nutritionistOptional = nutritionistService.findById(nutritionist_id);
 
         if (nutritionistOptional.isEmpty()) {
@@ -48,8 +50,9 @@ public class NutritionistController {
         }
 
         try {
-            List<Appointment> generatedAppointments = nutritionistService.generateMonthlyAppointments(nutritionist_id, year,
-                    month, startTime, endTime, excludedDays);
+            List<Appointment> generatedAppointments = nutritionistService.generateMonthlyAppointments(nutritionist_id, generateMonthlyAppointments.getYear(),
+                    generateMonthlyAppointments.getMonth(), generateMonthlyAppointments.getStartTime(),generateMonthlyAppointments.getEndTime() ,generateMonthlyAppointments.getExcludedDays());
+
             return ResponseEntity.status(HttpStatus.CREATED).body(generatedAppointments);
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();

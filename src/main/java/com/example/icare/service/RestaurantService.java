@@ -5,15 +5,15 @@ import com.example.icare.repository.RestaurantRepository;
 import com.example.icare.user.InvalidPasswordException;
 import com.example.icare.user.UserNotFoundException;
 import lombok.AllArgsConstructor;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Objects;
+
 @AllArgsConstructor
 @Service
 public class RestaurantService {
     private final RestaurantRepository restaurantRepository;
-    private final PasswordEncoder passwordEncoder;
 
     public void deleteRestaurantById(Long restaurantId) {
         restaurantRepository.deleteById(restaurantId);
@@ -41,7 +41,7 @@ public class RestaurantService {
             Restaurant restaurant = restaurantRepository.findById(restaurantId)
                     .orElseThrow(() -> new UserNotFoundException("User not found"));
 
-            if (! passwordEncoder.matches(password,restaurant.getUser().getPassword())){
+            if (!(Objects.equals(password, restaurant.getUser().getPassword()))){
                 throw new InvalidPasswordException("Invalid password");
             }
 

@@ -12,8 +12,10 @@ import com.example.icare.service.RestaurantService;
 import jakarta.servlet.http.HttpSession;
 import lombok.AllArgsConstructor;
 
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Objects;
 
 
 @Service
@@ -24,13 +26,12 @@ public class UserService   {
     private final PatientRepository patientRepository;
     private final NutritionistRepository nutritionistRepository;
     private final RestaurantRepository restaurantRepository;
-    private final PasswordEncoder passwordEncoder;
     private final PatientService patientService;
     private final NutritionistService nutritionistService;
     private final RestaurantService restaurantService;
 
-    public void signupPatient( PatientRequest patientRequest) {
-        User user = new User(passwordEncoder.encode(patientRequest.getPassword()));
+    public Patient signupPatient(PatientRequest patientRequest) {
+        User user = new User((patientRequest.getPassword()));
         Patient patient=new Patient(patientRequest.getEmail(), patientRequest.getFirstName(), patientRequest.getLastName(),patientRequest.getDob(), patientRequest.getCity(), patientRequest.getGender(),
                 patientRequest.getWeight(), patientRequest.getHeight(), patientRequest.getDisease(), patientRequest.getLifestyle());
 
@@ -38,10 +39,11 @@ public class UserService   {
         userRepository.save(user);
         patientRepository.save(patient);
 
+        return patient;
     }
 
-    public void signupNutritionist( NutritionistRequest nutritionistRequest) {
-        User user = new User(passwordEncoder.encode(nutritionistRequest.getPassword()));
+    public Nutritionist signupNutritionist( NutritionistRequest nutritionistRequest) {
+        User user = new User((nutritionistRequest.getPassword()));
 
         Nutritionist nutritionist = new Nutritionist(nutritionistRequest.getFirstName(),nutritionistRequest.getLastName(),nutritionistRequest.getEmail(),nutritionistRequest.getLocation(),nutritionistRequest.getCenterName(),
                 nutritionistRequest.getCenterLicense(),nutritionistRequest.getNutritionistLicense(),nutritionistRequest.getExperience());
@@ -49,22 +51,24 @@ public class UserService   {
         nutritionist.setStatus(false);
         userRepository.save(user);
         nutritionistRepository.save(nutritionist);
+        return (nutritionist);
     }
-
-    public void signupRestaurant( RestaurantRequest restaurantRequest) {
-        User user = new User(passwordEncoder.encode(restaurantRequest.getPassword()));
+    @Transactional
+    public Restaurant signupRestaurant( RestaurantRequest restaurantRequest) {
+        User user = new User((restaurantRequest.getPassword()));
         Restaurant restaurant = new Restaurant(restaurantRequest.getEmail(),restaurantRequest.getPhone_number(),restaurantRequest.getRestaurant_name(),
                 restaurantRequest.getRestaurant_location(),restaurantRequest.getRestaurant_license(),restaurantRequest.getSocial_media());
         restaurant.setStatus(false);
         userRepository.save(user);
         restaurantRepository.save(restaurant);
+        return (restaurant);
     }
 
     public Patient loginPatient(LoginRequest loginRequest) throws InvalidCredentialsException {
 
         Patient patient=patientService.getPatientByEmail(loginRequest.getEmail());
         // Validate the password
-        if (! passwordEncoder.matches(loginRequest.getPassword(),patient.getUser().getPassword())||!patient.isStatus() ) {
+        if (! (Objects.equals(loginRequest.getPassword(), patient.getUser().getPassword()))||!patient.isStatus() ) {
             throw new InvalidCredentialsException("Invalid email or password");
         }
         return patient;
@@ -73,7 +77,7 @@ public class UserService   {
     public Nutritionist loginNutritionist(LoginRequest loginRequest) {
         Nutritionist nutritionist=nutritionistService.getNutritionistByEmail(loginRequest.getEmail());
         // Validate the password
-        if (! passwordEncoder.matches(loginRequest.getPassword(),nutritionist.getUser().getPassword())||!nutritionist.isStatus() ) {
+        if (!(Objects.equals(loginRequest.getPassword(), nutritionist.getUser().getPassword()))||!nutritionist.isStatus() ) {
             throw new InvalidCredentialsException("Invalid email or password");
         }
         return nutritionist;
@@ -82,7 +86,7 @@ public class UserService   {
     public Restaurant loginRestaurant(LoginRequest loginRequest) {
         Restaurant restaurant=restaurantService.getRestaurantByEmail(loginRequest.getEmail());
         // Validate the password
-        if (! passwordEncoder.matches(loginRequest.getPassword(),restaurant.getUser().getPassword())||!restaurant.isStatus() ) {
+        if (! (Objects.equals(loginRequest.getPassword(), restaurant.getUser().getPassword()))||!restaurant.isStatus() ) {
             throw new InvalidCredentialsException("Invalid email or password");
         }
         return restaurant;

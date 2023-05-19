@@ -12,7 +12,7 @@ public class NutritionistRequest {
     private String password ;
     private String location ;
     private String centerName;
-    private byte[] centerLicense ;
-    private byte[] nutritionistLicense;
+    private String centerLicense ;
+    private String nutritionistLicense;
     private int experience ;
 }
