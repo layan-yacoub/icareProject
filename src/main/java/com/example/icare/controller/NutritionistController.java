@@ -3,6 +3,7 @@ package com.example.icare.controller;
 import com.example.icare.domain.Nutritionist;
 import com.example.icare.domain.Patient;
 import com.example.icare.registrationRequest.AmountRequest;
+import com.example.icare.registrationRequest.ChangeEmailRequest;
 import com.example.icare.registrationRequest.OffDay;
 import com.example.icare.registrationRequest.SetStartEndTime;
 import com.example.icare.repository.NutritionistRepository;
@@ -51,20 +52,14 @@ public class NutritionistController {
    }
 
     @PostMapping("/off-days")
-    public ResponseEntity<?> addOffDay(
-
-            @RequestBody OffDay offDay
-    ) throws ChangeSetPersister.NotFoundException {
+    public ResponseEntity<?> addOffDay(@RequestBody OffDay offDay) throws ChangeSetPersister.NotFoundException {
         nutritionistService.addOffDay(offDay.getNutritionist_id(), offDay.getOffDay());
         return ResponseEntity.status(HttpStatus.CREATED).body("Off day added successfully.");
     }
 
-    @DeleteMapping("/{nutritionistId}/off-days")
-    public ResponseEntity<String> removeOffDay(
-            @PathVariable Long nutritionistId,
-            @RequestBody LocalDate offDay
-    ) {
-        nutritionistService.removeOffDay(nutritionistId, offDay);
+    @DeleteMapping("/off-days")
+    public ResponseEntity<String> removeOffDay(@RequestBody OffDay offDay) {
+        nutritionistService.removeOffDay(offDay.getNutritionist_id(), offDay.getOffDay());
         return ResponseEntity.ok("Off day removed successfully.");
     }
 
@@ -127,12 +122,10 @@ public class NutritionistController {
 
     //CHANGE EMAIL
 
-    @PutMapping("/{nutritionist_id}/email") //change email
-    public ResponseEntity<String> changeEmail(@PathVariable("nutritionist_id") Long nutritionistId,
-                                              @RequestParam String password,
-                                              @RequestParam String newEmail) {
+    @PutMapping("/email") //change email
+    public ResponseEntity<String> changeEmail(@RequestBody ChangeEmailRequest changeEmailRequest) {
         try {
-            nutritionistService.changeEmail(nutritionistId, password, newEmail);
+            nutritionistService.changeEmail(changeEmailRequest.getNutritionistId(), changeEmailRequest.getPassword(), changeEmailRequest.getNewEmail());
             return ResponseEntity.ok("Email changed successfully");
         } catch (InvalidPasswordException e) {
             return ResponseEntity.badRequest().body("Invalid password");

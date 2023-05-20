@@ -77,10 +77,11 @@ public class Nutritionist {
     private List<LocalDate> offDays = new ArrayList<>();
 
 
-
     //message list
     @OneToMany(mappedBy = "nutritionist", cascade = CascadeType.ALL)  // Relationships with Report entity
     private List<Message> messages = new ArrayList<>();
+
+
 
     @OneToOne
     private User user;

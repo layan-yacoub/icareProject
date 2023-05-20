@@ -2,19 +2,18 @@ package com.example.icare.appointment;
 import com.example.icare.domain.Patient;
 import com.example.icare.registrationRequest.AvailableAppointmentRequest;
 import com.example.icare.registrationRequest.BookAppointmentRequest;
+import com.example.icare.registrationRequest.PatientNutritionistIdRequest;
+import com.example.icare.repository.PatientRepository;
 import com.example.icare.service.NutritionistService;
 import com.example.icare.service.PatientService;
-import jakarta.persistence.EntityNotFoundException;
 import lombok.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import com.example.icare.domain.Nutritionist;
 import com.example.icare.repository.NutritionistRepository;
-import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.*;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -34,16 +33,18 @@ public class AppointmentController  {
     private final NutritionistService nutritionistService;
 
     private final AppointmentRepository appointmentRepository;
+    private final PatientRepository patientRepository;
 
     private final PatientService patientService;
 
     @Autowired
     public AppointmentController(AppointmentService appointmentService, NutritionistRepository nutritionistRepository,
-                                 NutritionistService nutritionistService, AppointmentRepository appointmentRepository, PatientService patientService) {
+                                 NutritionistService nutritionistService, AppointmentRepository appointmentRepository, PatientRepository patientRepository, PatientService patientService) {
         this.appointmentService = appointmentService;
         this.nutritionistRepository = nutritionistRepository;
         this.nutritionistService = nutritionistService;
         this.appointmentRepository = appointmentRepository;
+        this.patientRepository = patientRepository;
         this.patientService = patientService;
     }
 
@@ -89,20 +90,11 @@ public class AppointmentController  {
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
-    @GetMapping("/patients/{patient_id}/appointments")//get the appointments for specific user
-    public ResponseEntity<List<Appointment>> getAppointmentsByPatientId(@PathVariable Long patient_id) {
-        Optional<Patient> patientOptional = patientService.findById(patient_id);
-
-        if (patientOptional.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-        }
-
-        Patient patient = patientOptional.get();
+  // get the appointments for a specific user
+    @GetMapping("/patients")
+    public ResponseEntity<List<Appointment>> getAppointmentsByPatientId(@RequestBody PatientNutritionistIdRequest patientIdRequest) {
+        Patient patient= patientService.getPatientById(patientIdRequest.getPatient_id());
         List<Appointment> appointments = appointmentService.getAppointmentsByPatient(patient);
-
-        if(appointments==null)
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-
         return ResponseEntity.ok(appointments);
     }
 

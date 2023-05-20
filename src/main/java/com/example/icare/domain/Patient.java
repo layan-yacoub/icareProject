@@ -58,7 +58,7 @@ public class Patient {
     @JoinColumn(name = "user_id")
     private User user;
 
-    @OneToMany(mappedBy = "patient", cascade = CascadeType.ALL) // One-to-many relationship with appointment
+    @OneToMany(mappedBy = "patient", cascade = CascadeType.ALL,fetch = FetchType.LAZY) // One-to-many relationship with appointment
     private List<Appointment>  appointments = new ArrayList<>();
 
     @OneToMany (mappedBy = "patient", cascade = CascadeType.ALL)// One-to-many relationship with message

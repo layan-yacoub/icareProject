@@ -26,8 +26,11 @@ public interface NutritionistRepository extends JpaRepository<Nutritionist, Long
     @Query("SELECT n FROM Nutritionist n WHERE n.nutritionist_id = :id")
     Nutritionist getNutritionistById(Long id);
 
-    @Query("SELECT n FROM Nutritionist n LEFT JOIN FETCH n.offDays WHERE n.id = :nutritionistId")
+    @Query("SELECT n FROM Nutritionist n LEFT JOIN FETCH n.offDays WHERE n.nutritionist_id = :nutritionistId")
     Nutritionist fetchOffDays(@Param("nutritionistId") Long nutritionistId);
+
+    @Query("SELECT n FROM Nutritionist n LEFT JOIN FETCH n.offDays WHERE n.nutritionist_id = :id")
+    Optional<Nutritionist> findByIdWithOffDays(@Param("id") Long id);
 
 
 }

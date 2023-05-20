@@ -44,10 +44,11 @@ public class NutritionistService {
     }
 
     public void removeOffDay(Long nutritionistId, LocalDate offDay) {
-        Nutritionist nutritionist = nutritionistRepository.findById(nutritionistId)
+        Nutritionist nutritionist = nutritionistRepository.findByIdWithOffDays(nutritionistId)
                 .orElseThrow(() -> new RuntimeException("Nutritionist not found"));
 
         nutritionist.getOffDays().remove(offDay);
+
         nutritionistRepository.save(nutritionist);
     }
     public List<Appointment> getBookedAppointments(Long nutritionistId){

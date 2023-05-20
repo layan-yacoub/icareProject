@@ -6,30 +6,38 @@ import com.example.icare.domain.Payment;
 import com.example.icare.repository.NutritionistRepository;
 import com.example.icare.repository.PatientRepository;
 import com.example.icare.repository.PaymentRepository;
+import com.example.icare.service.PatientService;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
-
+import java.util.Optional;
+@Transactional
 @Service
 public class AppointmentService {
     private final AppointmentRepository appointmentRepository;
     private final NutritionistRepository nutritionistRepository;
     private final PaymentRepository paymentRepository;
 
+
     private final PatientRepository patientRepository;
+    private final PatientService patientService;
 
 
     @Autowired
-    public AppointmentService(AppointmentRepository appointmentRepository, NutritionistRepository nutritionistRepository, PaymentRepository paymentRepository, PatientRepository patientRepository) {
+    public AppointmentService(AppointmentRepository appointmentRepository, NutritionistRepository nutritionistRepository, PaymentRepository paymentRepository, PatientRepository patientRepository, PatientService patientService) {
         this.appointmentRepository = appointmentRepository;
         this.nutritionistRepository = nutritionistRepository;
         this.paymentRepository = paymentRepository;
         this.patientRepository = patientRepository;
+        this.patientService = patientService;
     }
 
 
@@ -127,9 +135,10 @@ public class AppointmentService {
         appointmentRepository.deleteById(id);
     }
 
-    //get the appointments for specific user
+
+    // get the appointments for a specific user
     public List<Appointment> getAppointmentsByPatient(Patient patient) {
-        return appointmentRepository.findByPatient(patient);
+        return appointmentRepository.findByPatient(Optional.ofNullable(patient));
     }
 
     public void save(Appointment appointment) { appointmentRepository.save(appointment);

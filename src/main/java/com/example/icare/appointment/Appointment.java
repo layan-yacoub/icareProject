@@ -41,6 +41,9 @@ public class Appointment  {
     @Column(name="appointment_link")
     private String AppointmentLink ;
 
+
+
+
     public Appointment( ) {
     }
 }
