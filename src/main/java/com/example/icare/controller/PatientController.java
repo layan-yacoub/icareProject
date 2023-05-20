@@ -3,6 +3,7 @@ package com.example.icare.controller;
 import com.example.icare.domain.Nutritionist;
 import com.example.icare.domain.Patient;
 import com.example.icare.domain.Restaurant;
+import com.example.icare.registrationRequest.InbodyRequest;
 import com.example.icare.repository.PatientRepository;
 import com.example.icare.service.NutritionistService;
 import com.example.icare.service.PatientService;
@@ -48,14 +49,13 @@ public class PatientController {
     }
 
     //UPLOAD FILES
-    @PostMapping("/{patient_id}/inbody")  //upload in-body file
-    public ResponseEntity<?> uploadInbody(@PathVariable("patient_id") Long patientId,
-                                          @RequestParam("file") MultipartFile file) {
+    @PostMapping("/inbody")  //upload in-body file
+    public ResponseEntity<?> uploadInbody(@RequestBody InbodyRequest inbodyRequest) {
         try {
-            Patient patient = patientRepository.findById(patientId)
+            Patient patient = patientRepository.findById(inbodyRequest.getPatientId())
                     .orElseThrow(() -> new RuntimeException("Patient not found"));
 
-            byte[] InBody = file.getBytes();
+            byte[] InBody = inbodyRequest.getFile().getBytes();
             patient.setInBody(InBody);
             patientRepository.save(patient);
 
@@ -64,7 +64,7 @@ public class PatientController {
             return ResponseEntity.badRequest().build();
         }
     }
-    @PostMapping("/{patient_id}/upload_pdf")   //upload pdf file
+    @PostMapping("/{patient_id}/upload_pdf")//upload pdf file
     public ResponseEntity<?> setUpload_pdf(@PathVariable("patient_id") Long patientId,
                                            @RequestParam("file") MultipartFile file) {
         try {

@@ -90,7 +90,7 @@ public class AppointmentController  {
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
-  // get the appointments for a specific user
+    // get the appointments for a specific user
     @GetMapping("/patients")
     public ResponseEntity<List<Appointment>> getAppointmentsByPatientId(@RequestBody PatientNutritionistIdRequest patientIdRequest) {
         Patient patient= patientService.getPatientById(patientIdRequest.getPatient_id());
