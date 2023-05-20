@@ -8,6 +8,7 @@ import lombok.*;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -20,40 +21,40 @@ public class Nutritionist {
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     @Id
     private Long nutritionist_id;
-    @Column( nullable = false)
+    @Column(name = "n_first_name", nullable = false)
     private String nFirstName;
-    @Column( nullable = false)
+    @Column(name = "n_last_name", nullable = false)
     private String nLastName;
-    @Column()
+    @Column(name="email")
     private String email;
-    @Column( nullable = false)
+    @Column(name = "location", nullable = false)
     private String location;
-    @Column( nullable = false)
+    @Column(name = "center_name", nullable = false)
     private String centerName;
-    @Column( nullable = false)
+    @Column(name = "center_license", nullable = false)
 
     private String centerLicense;
-    @Column( nullable = false)
+    @Column(name = "nutritionist_license", nullable = false)
 
     private String nutritionistLicense;
-    @Column()
+    @Column(name = "experience")
     private int experience;
-    @Column
+    @Column(name = "amount")
     private double amount = 20; // by default 20
-    @Column
+    @Column(name="available_date")
     private LocalDate AvailableDate = LocalDate.of(2023,5,23); //by default
     public LocalTime startTime;
     private LocalTime endTime ;
 
-    @Column
+    @Column(name = "link")
     private String link;
-    @Column
+    @Column(name = "statues")
     private boolean status = true;
-    @Column
+    @Column(name="rating")
     private int rating ;
-    @Column
+    @Column(name="rating_counter")
     private int ratingCounter =0;
-    @Column
+    @Column(name="total_rating")
     private int totalRating=0;
 
 
@@ -70,9 +71,9 @@ public class Nutritionist {
 
     //Off Day List-add-remove
     @ElementCollection
-    @CollectionTable( joinColumns = @JoinColumn)
+    @CollectionTable(name = "off_days", joinColumns = @JoinColumn(name = "nutritionist_id"))
     @DateTimeFormat(pattern = "dd-MM-yyyy")
-    @Column()
+    @Column(name = "off_day")
     private List<LocalDate> offDays = new ArrayList<>();
 
 
@@ -82,6 +83,7 @@ public class Nutritionist {
     private List<Message> messages = new ArrayList<>();
 
     @OneToOne
+    @JoinColumn
     private User user;
     public Nutritionist() { }
 

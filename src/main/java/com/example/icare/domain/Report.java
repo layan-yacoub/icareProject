@@ -10,24 +10,24 @@ import lombok.*;
 @ToString
 @NoArgsConstructor
 @Entity
-@Table
+@Table(name = "report")
 public class Report {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long report_id;
-    @Column
+    @Column(name="user_id")
     private int user_id  ;
-    @Column
+    @Column(name="title")
     private String title;
-    @Column
+    @Column(name="reason")
     private String reason;
-    @Column
+    @Column(name="reported")
     private String reported;
-    @Column
+    @Column(name="rep_text")
     private String rep_text;
-    @Column
+    @Column(name="admin_id")
     private int admin_id  ;
-    @Column
+    @Column(name ="visible")
     private boolean visible = true;
 
     @ManyToOne(fetch = FetchType.LAZY)// Many-to-one relationship with user entity

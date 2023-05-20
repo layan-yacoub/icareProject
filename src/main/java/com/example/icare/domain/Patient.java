@@ -16,46 +16,46 @@ import java.util.List;
 @ToString
 @AllArgsConstructor
 @Entity
-@Table
+@Table(name = "patient")
 public class Patient {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
-    @Column
+    @Column(name="patient_id")
     private Long patient_id;
-    @Column
+    @Column(name="p_first_name")
     private String firstName;
-    @Column
+    @Column(name="p_last_name")
     private String lastName;
-    @Column
+    @Column(name="email")
     private String email;
-    @Column
+    @Column(name="dob")
     private LocalDate dob;
-    @Column
+    @Column(name="city")
     private String city;
-    @Column
+    @Column(name="gender")
     private String gender;
-    @Column
+    @Column(name="weight")
     private double weight;
-    @Column
+    @Column(name="height")
     private double height;
-    @Column
+    @Column(name="disease")
     private String disease;
-    @Column
+    @Column(name="lifestyle")
     private String lifestyle;
-    @Column
+    @Column(name="inbody")
     @Lob
     private byte[] InBody;
-    @Column
+    @Column(name="lab_medical_reports")
     @Lob
     private byte[] labMedicalReports;
-    @Column
+    @Column(name="upload_pdf")
     @Lob
     private byte[] upload_pdf;
-    @Column
+    @Column(name="statues")
     private boolean status =true;
 
     @OneToOne
-    @JoinColumn
+    @JoinColumn(name = "user_id")
     private User user;
 
     @OneToMany(mappedBy = "patient", cascade = CascadeType.ALL) // One-to-many relationship with appointment

@@ -8,7 +8,7 @@ import java.time.LocalDateTime;
 
 @Data
 @AllArgsConstructor
-@Table
+@Table(name="appointment")
 @Entity
 public class Appointment  {
 
@@ -27,18 +27,18 @@ public class Appointment  {
 
     // Many-to-one relationship with patient
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn
+    @JoinColumn(name = "patient_id")
     private Patient patient;
 
     // Many-to-one relationship with nutritionist
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn
+    @JoinColumn(name = "nutritionist_id")
     private Nutritionist nutritionist;
 
     // get data from nutritionist
-    @Column
+    @Column(name="amount")
     private double amount;
-    @Column
+    @Column(name="appointment_link")
     private String AppointmentLink ;
 
     public Appointment( ) {

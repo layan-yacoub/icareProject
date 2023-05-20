@@ -9,7 +9,7 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table
+@Table(name="admin")
 public class Admin {
     @Id @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long admin_id; //primary key
