@@ -17,6 +17,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Optional;
 
 
 @RestController //is used in REST Web services & mark class as Controller Class
@@ -164,6 +165,18 @@ public class PatientController {
         patientService.rateNutritionist(patientId, nutritionistId, rating);
         return ResponseEntity.ok("Rating saved successfully.");
     }
+
+    @GetMapping("/{nutritionist_id}/rate") //get the rating for a nutritionist
+    public ResponseEntity<Integer>getRateOfNutritionist(@PathVariable Long nutritionist_id){
+        Optional<Nutritionist> nutritionist = nutritionistService.findById(nutritionist_id);
+
+        if (nutritionist.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+        int rate = nutritionistService.getRating(nutritionist_id)  ;
+        return ResponseEntity.ok(rate);
+    }
+
 
     //CHANGE EMAIL
 

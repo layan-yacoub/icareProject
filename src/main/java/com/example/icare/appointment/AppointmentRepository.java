@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -16,14 +17,11 @@ public interface AppointmentRepository extends JpaRepository<Appointment,Long> {
     List<Appointment> findAvailableAppointments(@Param("listParam") List<Appointment> listParam, @Param("dateParam") LocalDateTime dateParam);
 
 
-    //List<Appointment> findByNutritionistAndStartTimeBetween( Nutritionist nutritionist, LocalDateTime startTime , LocalDateTime endTime);
-
-   // List<Appointment> findByNutritionistAndStartTimeGreaterThanEqual(Nutritionist nutritionist, LocalDateTime startTime);
-
-    //List<Appointment> findByNutritionistAndEndTimeLessThanEqual( Nutritionist nutritionist, LocalDateTime endTime);
-
     List<Appointment> findByNutritionist(Nutritionist nutritionist);
 
 
     List<Appointment> findByPatient(Patient patient);
+
+    @Query("SELECT a FROM Appointment a WHERE a.nutritionist = :nutritionist AND DATE(a.startTime) = :date")
+    List<Appointment> findByNutritionistAndDate(@Param("nutritionist") Nutritionist nutritionist, @Param("date") LocalDate date);
 }

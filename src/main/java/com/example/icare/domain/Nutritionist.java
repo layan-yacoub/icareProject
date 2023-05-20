@@ -5,14 +5,17 @@ import com.example.icare.appointment.Appointment;
 import com.example.icare.user.User;
 import jakarta.persistence.*;
 import lombok.*;
+import org.springframework.format.annotation.DateTimeFormat;
+
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 @Data
 @AllArgsConstructor
 @Entity
-@Table(name = "nutritionist")
+@Table
 public class Nutritionist {
 
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
@@ -40,10 +43,9 @@ public class Nutritionist {
     private double amount = 20; // by default 20
     @Column(name="available_date")
     private LocalDate AvailableDate = LocalDate.of(2023,5,23); //by default
-    @Column(name = "start_time")
-    private LocalDateTime startDateTime = AvailableDate.atTime(9, 0); //  by default Starting time for appointments (e.g., 9 AM);
-    @Column(name = "end_time")
-    private LocalDateTime endDateTime = AvailableDate.atTime(17, 0); //  by default Ending time for appointments (e.g., 5 PM);
+    public LocalTime startTime;
+    private LocalTime endTime ;
+
     @Column(name = "link")
     private String link;
     @Column(name = "statues")
@@ -56,19 +58,31 @@ public class Nutritionist {
     private int totalRating=0;
 
 
-
     //Appointments Lists
     @OneToMany(mappedBy = "nutritionist",fetch = FetchType.EAGER, cascade = CascadeType.ALL) // One-to-many relationship with appointments
     private List<Appointment> appointments = new ArrayList<>();
-    @OneToMany(mappedBy = "nutritionist", cascade = CascadeType.ALL)
+
+    //Booked Appointments ADD-REMOVE
+    @OneToMany(mappedBy = "nutritionist", fetch = FetchType.EAGER)
     private List<Appointment> bookedAppointments = new ArrayList<>();
+    public List<Appointment> getBookedAppointments() {
+        return bookedAppointments;
+    }
+
+    //Off Day List-add-remove
+    @ElementCollection
+    @CollectionTable(name = "off_days", joinColumns = @JoinColumn(name = "nutritionist_id"))
+    @DateTimeFormat(pattern = "dd-MM-yyyy")
+    @Column(name = "off_day")
+    private List<LocalDate> offDays = new ArrayList<>();
+
+
 
     //message list
     @OneToMany(mappedBy = "nutritionist", cascade = CascadeType.ALL)  // Relationships with Report entity
     private List<Message> messages = new ArrayList<>();
 
     @OneToOne
-    @JoinColumn(name = "user_id")
     private User user;
     public Nutritionist() { }
 

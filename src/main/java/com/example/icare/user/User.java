@@ -14,9 +14,9 @@ public class User  {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
-    @Column(name = "user_id", nullable = false, unique = true)
+    @Column( nullable = false, unique = true)
     private Long user_id; //primary key
-    @Column(name = "password", nullable = false)
+    @Column(nullable = false)
     private String password;
 
 
