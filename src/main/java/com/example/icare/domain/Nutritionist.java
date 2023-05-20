@@ -20,23 +20,40 @@ public class Nutritionist {
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     @Id
     private Long nutritionist_id;
+    @Column( nullable = false)
     private String nFirstName;
+    @Column( nullable = false)
     private String nLastName;
+    @Column()
     private String email;
+    @Column( nullable = false)
     private String location;
+    @Column( nullable = false)
     private String centerName;
+    @Column( nullable = false)
+
     private String centerLicense;
+    @Column( nullable = false)
+
     private String nutritionistLicense;
+    @Column()
     private int experience;
+    @Column
     private double amount = 20; // by default 20
+    @Column
     private LocalDate AvailableDate = LocalDate.of(2023,5,23); //by default
     public LocalTime startTime;
     private LocalTime endTime ;
 
+    @Column
     private String link;
+    @Column
     private boolean status = true;
+    @Column
     private int rating ;
+    @Column
     private int ratingCounter =0;
+    @Column
     private int totalRating=0;
 
 
@@ -53,18 +70,18 @@ public class Nutritionist {
 
     //Off Day List-add-remove
     @ElementCollection
+    @CollectionTable( joinColumns = @JoinColumn)
     @DateTimeFormat(pattern = "dd-MM-yyyy")
+    @Column()
     private List<LocalDate> offDays = new ArrayList<>();
+
 
 
     //message list
     @OneToMany(mappedBy = "nutritionist", cascade = CascadeType.ALL)  // Relationships with Report entity
     private List<Message> messages = new ArrayList<>();
 
-
-
     @OneToOne
-    @JoinColumn
     private User user;
     public Nutritionist() { }
 

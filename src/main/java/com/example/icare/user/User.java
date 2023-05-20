@@ -24,7 +24,6 @@ public class User  {
     private List<Report> reports = new ArrayList<>();
 
 
-
     public User (String password){
         this.password = password;
     }

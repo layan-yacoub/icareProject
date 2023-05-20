@@ -14,8 +14,11 @@ import java.time.LocalDate;
    public class Payment {
    @Id
    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+   @Column
    private Long payment_id; //primary key
+   @Column
    private LocalDate payment_date;
+   @Column
    private double payment_amount;
 
 

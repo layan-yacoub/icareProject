@@ -9,27 +9,31 @@ import java.sql.Timestamp;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table
+@Table()
 public class Message {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @Column()
     private Long message_id ;
+    @Column()
     private String messageText ;
-
+    @Column()
     @Lob
     private byte[] attachment;
-
+    @Column()
     private boolean hasAttachment;
-
+    @Column()
     private Timestamp messageDate;
 
     // Many-to-one relationships
 
     @ManyToOne
+    @JoinColumn()
     private Nutritionist nutritionist;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn()
     private Patient patient;
 
 

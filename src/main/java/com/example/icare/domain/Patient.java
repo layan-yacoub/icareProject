@@ -20,30 +20,45 @@ import java.util.List;
 public class Patient {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @Column
     private Long patient_id;
+    @Column
     private String firstName;
+    @Column
     private String lastName;
+    @Column
     private String email;
+    @Column
     private LocalDate dob;
+    @Column
     private String city;
+    @Column
     private String gender;
+    @Column
     private double weight;
+    @Column
     private double height;
+    @Column
     private String disease;
+    @Column
     private String lifestyle;
+    @Column
     @Lob
     private byte[] InBody;
+    @Column
     @Lob
     private byte[] labMedicalReports;
+    @Column
     @Lob
     private byte[] upload_pdf;
+    @Column
     private boolean status =true;
 
     @OneToOne
     @JoinColumn
     private User user;
 
-    @OneToMany(mappedBy = "patient", cascade = CascadeType.ALL,fetch = FetchType.LAZY) // One-to-many relationship with appointment
+    @OneToMany(mappedBy = "patient", cascade = CascadeType.ALL) // One-to-many relationship with appointment
     private List<Appointment>  appointments = new ArrayList<>();
 
     @OneToMany (mappedBy = "patient", cascade = CascadeType.ALL)// One-to-many relationship with message
