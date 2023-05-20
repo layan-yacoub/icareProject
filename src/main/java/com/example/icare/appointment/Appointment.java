@@ -8,7 +8,7 @@ import java.time.LocalDateTime;
 
 @Data
 @AllArgsConstructor
-@Table(name="appointment")
+@Table
 @Entity
 public class Appointment  {
 
@@ -20,29 +20,22 @@ public class Appointment  {
     private LocalDateTime booked_date = LocalDateTime.now();
 
     //the time of the appointment
-    @Column(nullable = false)
     private LocalDateTime startTime;
-    @Column(nullable = false)
+
     private LocalDateTime endTime;
 
     // Many-to-one relationship with patient
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "patient_id")
     private Patient patient;
 
     // Many-to-one relationship with nutritionist
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "nutritionist_id")
     private Nutritionist nutritionist;
 
     // get data from nutritionist
-    @Column(name="amount")
     private double amount;
-    @Column(name="appointment_link")
+
     private String AppointmentLink ;
-
-
-
 
     public Appointment( ) {
     }

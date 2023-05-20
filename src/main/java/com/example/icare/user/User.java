@@ -9,7 +9,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "users")
+@Table
 public class User  {
 
     @Id
@@ -22,6 +22,7 @@ public class User  {
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)    // Relationships with Report entity
     private List<Report> reports = new ArrayList<>();
+
 
 
     public User (String password){
